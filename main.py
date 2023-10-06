@@ -30,14 +30,6 @@ stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setLevel(logging.DEBUG)
 stdout_handler.setFormatter(formatter)
 
-logs_folder = "logs"
-current_date = datetime.datetime.now().strftime("%Y-%m-%d")
-log_file_path = os.path.join(logs_folder, f"{current_date}.log")
-file_handler = logging.FileHandler(log_file_path, encoding='utf-8')
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-
-logger.addHandler(file_handler)
 logger.addHandler(stdout_handler)
 
 @client.on(events.NewMessage)
