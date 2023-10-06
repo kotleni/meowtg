@@ -39,10 +39,9 @@ async def log_message(event):
     message = event.message
     message_text = event.text
 
-    log_message = "<...>"
+    log_message = ""
     if isinstance(sender, types.Channel):
         return
-        # log_message = f"({sender.username}, {sender.id}) in {chat.title}: {message_text}"
 
     if isinstance(sender, types.User):
         log_message = f"{sender.first_name} ({sender.username}, {sender.id}) in {chat.username}: {message_text}"
