@@ -1,0 +1,10 @@
+# critical!
+tg.session
+config.json
+logs/
+assets/
+
+# stuff
+__pycache__/
+env/
+plugins/__pycache__/
