@@ -76,15 +76,19 @@ async def log_message(event):
 async def main():
     global plugins_loader, api
 
+    logger.info("MeowTG is starting...")
+
     await client.start()
     me = await client.get_me()
     api = API(client, logger, me)
     plugins_loader = PluginsLoader(api)
     api.register_plugins_loader(plugins_loader)
 
+    logger.info("Loading plugins...")
     await plugins_loader.load_plugins()
     await client.run_until_disconnected()
 
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())
+    

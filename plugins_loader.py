@@ -15,7 +15,7 @@ class PluginsLoader:
         return [file for file in os.listdir(self.folder_path) if file.endswith('.py')]
 
     async def load_plugin(self, path):
-        print(f'Loading {path} plugin.')
+        self.api.logger.info(f'Loading {path} plugin.')
 
         module_name = path.replace('.py', '')
         module_path = f'{self.folder_path}/{module_name}.py'
@@ -34,7 +34,7 @@ class PluginsLoader:
                     self.plugins.append(instance)
                     break
         except Exception as e:
-            print(f"Error loading {path} plugin: {str(e)}")
+            self.api.logger.warn(f"Error loading {path} plugin: {str(e)}")
 
     async def load_plugins(self):
         files = self.get_plugins_files()
