@@ -22,7 +22,7 @@ if wizard.is_first_run():
 client = TelegramClient('tg', config.get('app_id'), config.get('app_hash'))
 plugins_loader = None
 
-logger = logging.getLogger()
+logger = logging.getLogger('meowtg')
 logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
 
@@ -91,4 +91,3 @@ async def main():
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())
-    
