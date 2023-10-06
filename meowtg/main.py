@@ -8,6 +8,7 @@ from telethon.tl.functions.messages import SendReactionRequest
 import logging, sys, os, datetime
 
 from result_codes import *
+from const import *
 
 api = None
 
@@ -24,7 +25,7 @@ plugins_loader = None
 
 logger = logging.getLogger('meowtg')
 logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+formatter = logging.Formatter(LOGGER_FORMATTER, datefmt='%H:%M:%S')
 
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setLevel(logging.DEBUG)
