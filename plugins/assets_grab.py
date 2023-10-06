@@ -5,7 +5,7 @@ import os
 
 class AssetsGrab(PluginBase):
     description = "Automatically download all media from chats"
-    enabled = True
+    enabled = False
 
     assets_path = 'assets/'
 

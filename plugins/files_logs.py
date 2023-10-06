@@ -2,15 +2,16 @@ from plugin_base import PluginBase
 from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
 import logging, os, datetime
+from const import *
 
 class FilesLogs(PluginBase):
     description = "Enable logging to files"
-    enabled = True
-    
+    enabled = False
+
     logs_folder = "logs"
 
     async def load(self):
-        formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
+        formatter = logging.Formatter(LOGGER_FORMATTER)
 
         current_date = datetime.datetime.now().strftime("%Y-%m-%d")
         log_file_path = os.path.join(self.logs_folder, f"{current_date}.log")
