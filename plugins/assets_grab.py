@@ -1,10 +1,13 @@
 from plugin_base import PluginBase
 from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
+import os
 
 class AssetsGrab(PluginBase):
     description = "Automatically download all media from chats"
     enabled = True
+
+    assets_path = 'assets/'
 
     SIZE_LIMIT_KB = 32 * 1024
 
@@ -12,7 +15,8 @@ class AssetsGrab(PluginBase):
         super().__init__(api)
     
     async def load(self):
-        pass
+        if not os.path.isdir(self.assets_path):
+            os.mkdir(self.assets_path)
 
     async def on_event(self, event):
         chat = await event.get_chat()
@@ -39,4 +43,4 @@ class AssetsGrab(PluginBase):
             return
         
         # download image
-        await self.api.client.download_media(message, 'assets')
+        await self.api.client.download_media(message, self.assets_path)

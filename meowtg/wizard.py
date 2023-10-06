@@ -14,7 +14,5 @@ class Wizard:
         app_id = input("app_id = ")
         app_hash = input("app_hash = ")
 
-        os.mkdir('assets/')
-
         config.set('app_id', app_id)
         config.set('app_hash', app_hash)
