@@ -2,6 +2,7 @@ class PluginBase:
     api = None
 
     description = ""
+    enabled = False
 
     def __init__(self, api) -> None:
         self.api = api

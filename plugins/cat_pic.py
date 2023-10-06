@@ -13,7 +13,8 @@ class CatPicApi:
 
 class CatPic(PluginBase):
     description = "Send random cat pic on .cat command"
-
+    enabled = True
+    
     cat_pic_api = CatPicApi()
 
     def __init__(self, api) -> None:

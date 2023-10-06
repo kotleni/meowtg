@@ -13,6 +13,7 @@ class ReactTarget:
 
 class AutoReact(PluginBase):
     description = "Automatically react to messages from certain users (config in py code)"
+    enabled = False
 
     react_targets = [ReactTarget(802764912, '💩'), ReactTarget(971778574, '🔥')]
 

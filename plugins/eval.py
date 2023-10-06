@@ -4,7 +4,8 @@ from telethon.tl.functions.messages import SendReactionRequest
 
 class Eval(PluginBase):
     description = "Evaluate python code on .eval command"
-
+    enabled = True
+    
     def __init__(self, api) -> None:
         super().__init__(api)
     

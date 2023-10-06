@@ -5,6 +5,8 @@ import logging, os, datetime
 
 class FilesLogs(PluginBase):
     description = "Enable logging to files"
+    enabled = True
+    
     logs_folder = "logs"
 
     async def load(self):

@@ -15,8 +15,6 @@ class PluginsLoader:
         return [file for file in os.listdir(self.folder_path) if file.endswith('.py')]
 
     async def load_plugin(self, path):
-        self.api.logger.info(f'Loading {path} plugin.')
-
         module_name = path.replace('.py', '')
         module_path = f'{self.folder_path}/{module_name}.py'
 
@@ -30,8 +28,13 @@ class PluginsLoader:
             for name, obj in vars(module).items():
                 if isinstance(obj, type) and issubclass(obj, PluginBase) and obj is not PluginBase:
                     instance = obj(self.api)
-                    await instance.load()
-                    self.plugins.append(instance)
+                    if instance.enabled:
+                        await instance.load()
+                        self.plugins.append(instance)
+
+                        self.api.logger.info(f'Plugin {path} LOADED')
+                    else:
+                        self.api.logger.info(f'Plugin {path} disabled, NOT LOADED.')
                     break
         except Exception as e:
             self.api.logger.warn(f"Error loading {path} plugin: {str(e)}")

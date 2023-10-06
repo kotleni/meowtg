@@ -9,7 +9,8 @@ class CommandLineExecutor:
     
 class Cmd(PluginBase):
     description = "Execute shell commands on .cmd command"
-
+    enabled = True
+    
     executor = CommandLineExecutor()
 
     def __init__(self, api) -> None:

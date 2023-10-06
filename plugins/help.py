@@ -4,6 +4,8 @@ from telethon.tl.functions.messages import SendReactionRequest
 
 class Help(PluginBase):
     description = "Help commands: .plugins"
+    enabled = True
+    
     def __init__(self, api) -> None:
         super().__init__(api)
     

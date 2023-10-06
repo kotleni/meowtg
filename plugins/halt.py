@@ -4,7 +4,8 @@ from telethon.tl.functions.messages import SendReactionRequest
 
 class Halt(PluginBase):
     description = "Halt bot on .halt command"
-
+    enabled = True
+    
     def __init__(self, api) -> None:
         super().__init__(api)
     
