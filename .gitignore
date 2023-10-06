@@ -1,5 +1,6 @@
 # critical!
 tg.session
+tg.session-journal
 config.json
 logs/
 assets/
