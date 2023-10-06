@@ -32,12 +32,12 @@ class PluginsLoader:
                         await instance.load()
                         self.plugins.append(instance)
 
-                        self.api.logger.info(f'Plugin {path} LOADED')
+                        self.api.logger.info(f'Plugin {path} loaded.')
                     else:
-                        self.api.logger.info(f'Plugin {path} disabled, NOT LOADED.')
+                        self.api.logger.warn(f'Plugin {path} not loaded. (DISABLED)')
                     break
         except Exception as e:
-            self.api.logger.warn(f"Error loading {path} plugin: {str(e)}")
+            self.api.logger.error(f"Error loading {path} plugin: {str(e)}")
 
     async def load_plugins(self):
         files = self.get_plugins_files()

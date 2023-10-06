@@ -1,1 +1,1 @@
-LOGGER_FORMATTER = '(%(levelname)s | %(asctime)s) -> %(message)s)'
+LOGGER_FORMATTER = '(%(levelname)s | %(asctime)s) -> %(message)s'

@@ -6,6 +6,7 @@ from plugins_loader import PluginsLoader
 from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
 import logging, sys, os, datetime
+from custom_formatter import CustomFormatter
 
 from result_codes import *
 from const import *
@@ -25,7 +26,7 @@ plugins_loader = None
 
 logger = logging.getLogger('meowtg')
 logger.setLevel(logging.INFO)
-formatter = logging.Formatter(LOGGER_FORMATTER, datefmt='%H:%M:%S')
+formatter = CustomFormatter()
 
 stdout_handler = logging.StreamHandler(sys.stdout)
 stdout_handler.setLevel(logging.DEBUG)
