@@ -15,10 +15,10 @@ class Config:
         file.close()
 
     def save(self):
-        json = json.dumps(self.pairs)
+        content = json.dumps(self.pairs)
 
         file = open(self.path, 'w')
-        file.write(json)
+        file.write(content)
         file.close()
 
     def get(self, key):
