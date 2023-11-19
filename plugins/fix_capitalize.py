@@ -4,7 +4,7 @@ from telethon.tl.functions.messages import SendReactionRequest
 
 class Cmd(PluginBase):
     description = "Capitalize all self messages."
-    enabled = True
+    enabled = False
 
     def __init__(self, api) -> None:
         super().__init__(api)
