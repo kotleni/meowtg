@@ -1,7 +1,7 @@
 from plugin_base import PluginBase
 from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
-import requests
+import requests, os
 from result_codes import *
 
 class CatPicApi:
@@ -30,8 +30,11 @@ class CatPic(PluginBase):
         if args[0] == "cat":
             try:
                 catpic = self.cat_pic_api.get_random_cat_pic()
-                # await self.api.client.delete_messages(chat, [message])
-                await self.api.client.send_file(chat, catpic)
+                f = open('/tmp/catpic.jpg', 'wb')  
+                f.write(catpic)
+                f.close()
+                # await self.api.client.delete_messages(chat, [message])    
+                await self.api.client.send_file(chat, '/tmp/catpic.jpg', force_document=False)
                 return COMMAND_OK_MESSAGE_REMOVE
             except Exception as e:
                 return "Exception: " + str(e)
