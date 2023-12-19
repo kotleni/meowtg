@@ -20,8 +20,12 @@ class Cmd(PluginBase):
         if args[0] == "cmd" or args[0] == "shell" or args[0] == "exec":
             output = ""
             try:
-                output = output + str(self.executor.execute(args[1]).stdout.decode('utf-8'))
-                output = output + str(self.executor.execute(args[1]).stderr.decode('utf-8'))
+                command = " ".join(args[1:])
+                output = output + str(self.executor.execute(command).stdout.decode('utf-8'))
+                output = output + str(self.executor.execute(command).stderr.decode('utf-8'))
+
+            except IndexError:
+                output = "Incorrect command usage. Example: .cmd <command> (e.g., .cmd wmic csproduct get name)."
             except Exception as e:
                 output = e
             return output
