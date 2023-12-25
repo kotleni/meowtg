@@ -17,5 +17,10 @@ class Help(PluginBase):
             output = ""
             for plugin in self.api.plugins_loader.plugins:
                 class_name = plugin.__class__.__name__
-                output += f'{class_name} - {plugin.description}\n'
+                description = plugin.description
+                if plugin.__doc__:
+                    description = plugin.__doc__
+
+                output += f'{class_name} - {description}\n'
+                
             return output
