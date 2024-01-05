@@ -18,14 +18,13 @@ class Cmd(PluginBase):
         
     async def on_command(self, event, args) -> str:
         if args[0] == "cmd" or args[0] == "shell" or args[0] == "exec":
-            output = ""
             try:
                 command = " ".join(args[1:])
-                output = output + str(self.executor.execute(command).stdout.decode('utf-8'))
+                output = str(self.executor.execute(command).stdout.decode('utf-8'))
                 output = output + str(self.executor.execute(command).stderr.decode('utf-8'))
-
+                
             except IndexError:
-                output = "Incorrect command usage. Example: .cmd <command> (e.g., .cmd wmic csproduct get name)."
+                return "Incorrect command usage. Example: .cmd <command> (e.g., .cmd wmic csproduct get name)."
             except Exception as e:
-                output = e
+                return e
             return output
