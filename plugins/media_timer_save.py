@@ -3,7 +3,8 @@ from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
 
 class MediaTimerSave(PluginBase):
-    description = "Save and post to saved messages all media with timer"
+   """Save and post to saved messages all media with timer"""
+    
     enabled = True
     
     def __init__(self, api) -> None:
