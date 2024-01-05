@@ -8,7 +8,8 @@ class CommandLineExecutor:
         return subprocess.run(command, shell=True, capture_output=True)
     
 class Cmd(PluginBase):
-    description = "Execute shell commands on .cmd command"
+    """Execute shell commands on .cmd command"""
+    
     enabled = True
     
     executor = CommandLineExecutor()
