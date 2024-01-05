@@ -3,7 +3,8 @@ from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
 
 class Halt(PluginBase):
-    description = "Halt bot on .halt command"
+    """Halt bot on .halt command"""
+    
     enabled = True
     
     def __init__(self, api) -> None:
