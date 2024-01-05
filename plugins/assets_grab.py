@@ -4,7 +4,8 @@ from telethon.tl.functions.messages import SendReactionRequest
 import os
 
 class AssetsGrab(PluginBase):
-    description = "Automatically download all media from chats"
+    """Automatically download all media from chats"""
+    
     enabled = False
 
     assets_path = 'assets/'
