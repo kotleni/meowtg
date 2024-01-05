@@ -3,7 +3,7 @@ from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
 
 class Cmd(PluginBase):
-    description = "Capitalize all self messages."
+    """Capitalize all self messages."""
     enabled = False
 
     def __init__(self, api) -> None:
