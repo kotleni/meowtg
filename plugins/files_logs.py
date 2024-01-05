@@ -5,7 +5,7 @@ import logging, os, datetime
 from const import *
 
 class FilesLogs(PluginBase):
-    description = "Enable logging to files"
+    """Enable logging to files"""
     enabled = False
 
     logs_folder = "logs"
