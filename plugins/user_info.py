@@ -4,7 +4,7 @@ from telethon.tl.functions.messages import SendReactionRequest
 import subprocess
     
 class UserInfo(PluginBase):
-    description = "User info by .user command"
+    """User info by .user command"""
     enabled = True
 
     def __init__(self, api) -> None:

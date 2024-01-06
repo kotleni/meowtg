@@ -12,7 +12,8 @@ class CatPicApi:
         return requests.get(self.get_random_cat_pic_url()).content
 
 class CatPic(PluginBase):
-    description = "Send random cat pic on .cat command"
+    """Send random cat pic on .cat command"""
+    
     enabled = True
     
     cat_pic_api = CatPicApi()
