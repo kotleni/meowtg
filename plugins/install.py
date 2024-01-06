@@ -5,7 +5,9 @@ from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
 from const import CUSTOM_PLUGIN_PATH, PLUGIN_PATH
 from main import logger
-from os import listdir, remove
+from os import listdir, remove, mkdir
+
+
 class Url:
 
     def __init__(self, url):
@@ -21,6 +23,15 @@ class Url:
             return response.status_code
 
         return response.status_code
+
+
+def check_custom_plugins_directory():
+    try:
+        listdir(CUSTOM_PLUGIN_PATH)
+
+    except FileNotFoundError:
+        logger.info('Creating custom plugins directory')
+        mkdir(CUSTOM_PLUGIN_PATH)
 
 
 class Install(PluginBase):
@@ -42,6 +53,7 @@ class Install(PluginBase):
         output = ''
         plugin_name = ''
         if args[0] == "install":
+            check_custom_plugins_directory()
             chat = await event.get_chat()
 
             if event.reply_to:
@@ -78,7 +90,6 @@ class Install(PluginBase):
             custom_plugins_loader = PluginsLoader(self.api)
             custom_plugins_loader.folder_path = CUSTOM_PLUGIN_PATH
             self.api.register_plugins_loader(custom_plugins_loader)
-
 
             await custom_plugins_loader.load_plugins()
 
