@@ -74,11 +74,17 @@ async def main():
     await client.start()
     me = await client.get_me()
     api = API(client, logger, me)
+
     plugins_loader = PluginsLoader(api)
     api.register_plugins_loader(plugins_loader)
 
+    custom_plugins_loader = PluginsLoader(api)
+    custom_plugins_loader.folder_path = CUSTOM_PLUGIN_PATH
+    api.register_plugins_loader(custom_plugins_loader)
+
     logger.info("Loading plugins...")
     await plugins_loader.load_plugins()
+    await custom_plugins_loader.load_plugins()
     await client.run_until_disconnected()
 
 if __name__ == "__main__":
