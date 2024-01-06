@@ -3,16 +3,16 @@ from plugins_loader import PluginsLoader
 from plugin_base import PluginBase
 from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
-from const import PLUGIN_PATH
+from const import CUSTOM_PLUGIN_PATH, PLUGIN_PATH
 from main import logger
-
+from os import listdir, remove
 class Url:
 
     def __init__(self, url):
         self.file_name = url.split('/')[-1]
         self.url = url
 
-    def download(self, path=PLUGIN_PATH):
+    def download(self, path=CUSTOM_PLUGIN_PATH):
         response = requests.get(self.url)
         if response.status_code == 200:
             with open(path + self.file_name, 'wb') as file:
@@ -49,7 +49,7 @@ class Install(PluginBase):
                 message = await self.api.client.get_messages(chat.id, ids=event.reply_to.reply_to_msg_id)
                 plugin_name = message.media.document.attributes[0].file_name
 
-                await self.api.client.download_file(message, PLUGIN_PATH + plugin_name)
+                await self.api.client.download_file(message, CUSTOM_PLUGIN_PATH + plugin_name)
                 output = f"Successfully installed plugin: {plugin_name}"
 
             elif 'http' in event.message.text:
@@ -67,12 +67,20 @@ class Install(PluginBase):
                 """
                 ...
 
+                ...
+
             else:
                 output = "Error installing plugin: unknown error"
 
-            plugins_loader = PluginsLoader(self.api)
-            self.api.register_plugins_loader(plugins_loader)
-            await plugins_loader.load_plugins()
+            if plugin_name in listdir(PLUGIN_PATH):
+                remove(f"{CUSTOM_PLUGIN_PATH}/{plugin_name}")
+                return 'Cannot install module: Already installed'
+            custom_plugins_loader = PluginsLoader(self.api)
+            custom_plugins_loader.folder_path = CUSTOM_PLUGIN_PATH
+            self.api.register_plugins_loader(custom_plugins_loader)
+
+
+            await custom_plugins_loader.load_plugins()
 
             logger.info(f"Installed new plugin {plugin_name}")
             return output
