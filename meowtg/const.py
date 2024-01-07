@@ -1,3 +1,3 @@
 LOGGER_FORMATTER = '(%(levelname)s | %(asctime)s) -> %(message)s'
-REPO = 'https://github.com/kotlin/meowtgrepo/'
+REPO = 'https://raw.githubusercontent.com/kotleni/meowtg-plugins/main/plugins/'
 PLUGINS_FOLDER_PATH = 'plugins/'
