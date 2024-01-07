@@ -19,7 +19,7 @@ class Eval(PluginBase):
             try:
                 message_text = event.text
                 code = message_text[6:]
-                result = eval(args[1])
+                result = eval(code)
             except Exception as e:
                 result = e
             return result
