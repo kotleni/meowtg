@@ -11,6 +11,8 @@ from custom_formatter import CustomFormatter
 from result_codes import *
 from const import *
 
+import shlex
+
 api = None
 
 config = Config()
@@ -53,7 +55,7 @@ async def log_message(event):
     prefix = "."
     if message_text.startswith(prefix) and len(message_text) > 3 and sender.id == api.get_my_id():
         command = message_text[len(prefix):]
-        args = command.split(' ')
+        args = shlex.split(command)
         result = await plugins_loader.on_command(event, args)
 
         if result == COMMAND_OK_MESSAGE_REMOVE:
