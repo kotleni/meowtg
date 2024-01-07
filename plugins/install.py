@@ -3,7 +3,7 @@ from plugins_loader import PluginsLoader
 from plugin_base import PluginBase
 from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
-from const import CUSTOM_PLUGIN_PATH, PLUGIN_PATH
+from const import PLUGINS_FOLDER_PATH, PLUGINS_FOLDER_PATH
 from main import logger
 from os import listdir, remove, mkdir
 
@@ -14,7 +14,7 @@ class Url:
         self.file_name = url.split('/')[-1]
         self.url = url
 
-    def download(self, path=CUSTOM_PLUGIN_PATH):
+    def download(self, path=PLUGINS_FOLDER_PATH):
         response = requests.get(self.url)
         if response.status_code == 200:
             with open(path + self.file_name, 'wb') as file:
@@ -25,13 +25,13 @@ class Url:
         return response.status_code
 
 
-def check_custom_plugins_directory():
-    try:
-        listdir(CUSTOM_PLUGIN_PATH)
-
-    except FileNotFoundError:
-        logger.info('Creating custom plugins directory')
-        mkdir(CUSTOM_PLUGIN_PATH)
+# def check_custom_plugins_directory():
+#     try:
+#         listdir(PLUGINS_FOLDER_PATH)
+#
+#     except FileNotFoundError:
+#         logger.info('Creating custom plugins directory')
+#         mkdir(PLUGINS_FOLDER_PATH)
 
 
 class Install(PluginBase):
@@ -53,7 +53,7 @@ class Install(PluginBase):
         output = ''
         plugin_name = ''
         if args[0] == "install":
-            check_custom_plugins_directory()
+            # check_custom_plugins_directory()
             chat = await event.get_chat()
 
             if event.reply_to:
@@ -61,7 +61,7 @@ class Install(PluginBase):
                 message = await self.api.client.get_messages(chat.id, ids=event.reply_to.reply_to_msg_id)
                 plugin_name = message.media.document.attributes[0].file_name
 
-                await self.api.client.download_file(message, CUSTOM_PLUGIN_PATH + plugin_name)
+                await self.api.client.download_file(message, PLUGINS_FOLDER_PATH + plugin_name)
                 output = f"Successfully installed plugin: {plugin_name}"
 
             elif 'http' in event.message.text:
@@ -84,14 +84,12 @@ class Install(PluginBase):
             else:
                 output = "Error installing plugin: unknown error"
 
-            if plugin_name in listdir(PLUGIN_PATH):
-                remove(f"{CUSTOM_PLUGIN_PATH}/{plugin_name}")
-                return 'Cannot install module: Already installed'
-            custom_plugins_loader = PluginsLoader(self.api)
-            custom_plugins_loader.folder_path = CUSTOM_PLUGIN_PATH
-            self.api.register_plugins_loader(custom_plugins_loader)
+            #if plugin_name in listdir(PLUGINS_FOLDER_PATH):
+                #remove(f"{PLUGINS_FOLDER_PATH}/{plugin_name}")
+                #return 'You already have this plugin, updated.'
 
-            await custom_plugins_loader.load_plugins()
+            plugins_loader = self.api.plugins_loader
+            await plugins_loader.load_plugin(plugin_name)
 
             logger.info(f"Installed new plugin {plugin_name}")
             return output

@@ -2,10 +2,11 @@ import sys
 import os
 import importlib.util
 from plugin_base import PluginBase
+from const import PLUGINS_FOLDER_PATH
 
 class PluginsLoader:
     api = None
-    folder_path = "plugins"
+    folder_path = PLUGINS_FOLDER_PATH
     plugins = []
 
     def __init__(self, api):
