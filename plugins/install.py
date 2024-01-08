@@ -52,6 +52,18 @@ class Install(PluginBase):
     async def on_command(self, event, args) -> str:
         output = ''
         plugin_name = ''
+
+        if args[0] == 'remove':
+            plugin_name = event.message.text.split()[1]
+            try:
+                if '.py' not in plugin_name:
+                    plugin_name+='.py'
+                remove(PLUGINS_FOLDER_PATH + '/' + plugin_name)
+            except FileNotFoundError:
+                return 'Plugin not installed'
+
+            return 'Plugin not installed.'
+            
         if args[0] == "install":
             # check_custom_plugins_directory()
             chat = await event.get_chat()
