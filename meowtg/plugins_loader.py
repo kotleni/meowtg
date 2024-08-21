@@ -19,6 +19,13 @@ class PluginsLoader:
     
     def get_loaded_plugins(self):
         return self.plugins
+    
+    async def reload_plugins(self):
+        for plugin in self.get_loaded_plugins():
+            if plugin.header.name == 'pkg': # Ignore integrated pkg plugin
+                continue
+            await self.unload_plugin(plugin.header.name)
+            await self.load_plugin(plugin.header.name)
 
     async def load_plugin(self, path):
         module_name = path.replace('.py', '')
