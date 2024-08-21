@@ -92,6 +92,8 @@ class Pkg(PluginBase):
                         output += '\n Installed v{}'.format(local_plug.header.versionName)
                 return output
             elif args[1] == 'install' or args[1] == 'update':
+                if len(args) < 3:
+                    return 'Usage: .pkg install <name>'
                 content = self.remoteManager.download_plugin(args[2])
                 path = '{}/{}.py'.format(self.pluginsManager.loader.folder_path, args[2])
                 if os.path.isfile(path):
