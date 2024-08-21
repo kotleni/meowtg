@@ -98,7 +98,7 @@ class Pkg(PluginBase):
                     output += '\n{} v{}\n  {}\n  by {}'.format(entry['name'], entry['versionName'], entry['description'], entry['author'])
 
                     if local_plug != None:
-                        output += '\n Installed v{}'.format(local_plug.header.versionName)
+                        output += '\n  <i>Installed v{}</i>'.format(local_plug.header.versionName)
                 return output
             elif args[1] == 'install':
                 if len(args) < 3:
