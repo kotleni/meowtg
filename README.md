@@ -2,6 +2,7 @@
 
 ### Features
 * Plugins system
+* Plugins remote repository and management
 * Setup wizard
 * Full logging
 * venv install and run scripts
