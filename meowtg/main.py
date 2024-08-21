@@ -79,6 +79,7 @@ async def main():
     global plugins_loader, api
 
     logger.info("MeowTG is starting...")
+    logger.info("Version: {}".format(VERSION_NAME))
     logger.info("Github: {}".format(REPO))
 
     await client.start()
