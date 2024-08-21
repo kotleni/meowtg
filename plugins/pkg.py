@@ -80,7 +80,7 @@ class Pkg(PluginBase):
     async def on_command(self, event, args):
         if args[0] == 'pkg':
             if len(args) < 2:
-                return '<b>Usage:</b> .pkg <list|remote|install|update|remove> ...'
+                return '<b>Usage:</b> .pkg list|remote|install|update|remove]'
             elif args[1] == 'list':
                 plugins = self.pluginsManager.get_all()
                 output = '<b>Installed plugins:</b>\n'
