@@ -48,7 +48,10 @@ async def log_message(event):
         return
 
     if isinstance(sender, types.User):
-        log_message = f"{sender.first_name} ({sender.username}, {sender.id}) in {chat.username}: {message_text}"
+        try:
+            log_message = f"{sender.first_name} ({sender.username}, {sender.id}) in {chat.username}: {message_text}"
+        except:
+            log_message = f"{sender.first_name} ({sender.username}, {sender.id}) in ^{chat.title}: {message_text}"
 
     logger.info(log_message)
     
