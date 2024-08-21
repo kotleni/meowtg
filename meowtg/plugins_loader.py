@@ -14,6 +14,9 @@ class PluginsLoader:
 
     def get_plugins_files(self):
         return [file for file in os.listdir(self.folder_path) if file.endswith('.py')]
+    
+    def get_loaded_plugins(self):
+        return self.plugins
 
     async def load_plugin(self, path):
         module_name = path.replace('.py', '')
