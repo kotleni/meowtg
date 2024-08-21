@@ -20,6 +20,15 @@ class RemoteManager:
         static = requests.get(self.REMOTE_STATIC_URL).text
         return json.loads(static)
     
+    def fetch_remote_plugin(self, name):
+        all = self.fetch_remote_plugins()
+        entry = None
+        for _entry in all:
+            if _entry['name'] == name:
+                entry = _entry
+
+        return entry
+    
     def download_plugin(self, name):
         all = self.fetch_remote_plugins()
         entry = None
@@ -91,7 +100,7 @@ class Pkg(PluginBase):
                     if local_plug != None:
                         output += '\n Installed v{}'.format(local_plug.header.versionName)
                 return output
-            elif args[1] == 'install' or args[1] == 'update':
+            elif args[1] == 'install':
                 if len(args) < 3:
                     return 'Usage: .pkg install <name>'
                 content = self.remoteManager.download_plugin(args[2])
@@ -108,6 +117,37 @@ class Pkg(PluginBase):
                     await self.pluginsManager.loader.load_plugin(args[2])
 
                     return 'Installed and loaded {} plugin.'.format(args[2])
+            elif args[1] == 'update':
+                if len(args) < 3:
+                    return 'Usage: .pkg install <name>'
+                
+                name = args[2]
+                path = '{}/{}.py'.format(self.pluginsManager.loader.folder_path, name)
+                if os.path.isfile(path):
+                    plugin = self.pluginsManager.find(name)
+                    entry = self.remoteManager.fetch_remote_plugin(name)
+
+                    if entry == None:
+                        return 'Plugin found locally but not exist in remote.'
+                    
+                    if entry['versionCode'] <= plugin.header.versionCode:
+                        return 'Plugin is already updated to actual v{} version.'.format(plugin.header.versionName)
+                    
+                    content = self.remoteManager.download_plugin(name)
+
+                    await self.pluginsManager.loader.unload_plugin(name)
+                    os.remove(path)
+
+                    f = open(path, 'w')
+                    f.write(content)
+                    f.close()
+
+                    await self.pluginsManager.loader.load_plugin(name)
+
+                    return 'Success updating plugin {} from v{} to v{}.'.format(name, plugin.header.versionName, entry['versionName'])
+                else:
+                    return 'Plugin {} not installed.'.format(name)
+                
             elif args[1] == 'remove':
                 if len(args) < 3:
                     return 'Usage: .pkg remove <name>'
