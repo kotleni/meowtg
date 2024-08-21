@@ -6,6 +6,7 @@ from plugin_header import PluginHeader
 from telethon import TelegramClient, events, types
 from telethon.tl.functions.messages import SendReactionRequest
 
+import os
 import json
 import requests
 
@@ -16,8 +17,28 @@ class RemoteManager:
     REMOTE_PLUGINS_URL = 'https://raw.githubusercontent.com/kotleni/meowtg-plugins/main/plugins'
 
     def fetch_remote_plugins(self):
-        static = requests.get(self.REMOTE_STATIC_URL).content
+        static = requests.get(self.REMOTE_STATIC_URL).text
         return json.loads(static)
+    
+    def download_plugin(self, name):
+        all = self.fetch_remote_plugins()
+        entry = None
+        for _entry in all:
+            if _entry['name'] == name:
+                entry = _entry
+
+        if entry == None:
+            return None
+
+        url = '{}/{}.py'.format(self.REMOTE_PLUGINS_URL, name)
+        content = requests.get(url).text
+
+
+        header = PluginHeader()
+        header.loadFromRemoteObject(entry)
+        header_text = header.getAsText()
+
+        return '# {}\n{}'.format(header_text, content)
 
 class PluginsManager:
     api: API = None
@@ -50,7 +71,7 @@ class Pkg(PluginBase):
     async def on_command(self, event, args):
         if args[0] == 'pkg':
             if len(args) < 2:
-                return 'Usage: .pkg <list|all> ...'
+                return 'Usage: .pkg <list|available|install> ...'
             elif args[1] == 'list':
                 plugins = self.pluginsManager.get_all()
                 output = 'Installed plugins:\n'
@@ -70,6 +91,21 @@ class Pkg(PluginBase):
                     if local_plug != None:
                         output += '\n Installed v{}'.format(local_plug.header.versionName)
                 return output
+            elif args[1] == 'install' or args[1] == 'update':
+                content = self.remoteManager.download_plugin(args[2])
+                path = '{}/{}.py'.format(self.pluginsManager.loader.folder_path, args[2])
+                if os.path.isfile(path):
+                   return 'Plugin already exist, use .pkg update <name> instead.' 
+                else:
+                    if content == None:
+                        return 'Unknown plugin. Check .pkg remote to get all remote plugins.'
+                    f = open(path, 'w')
+                    f.write(content)
+                    f.close()
+
+                    await self.pluginsManager.loader.load_plugin(args[2])
+
+                    return 'Installed and loaded {} plugin.'.format(args[2])
             else:
                 return 'Unknown sub-command.'
             
