@@ -38,6 +38,7 @@ class PluginsLoader:
 
                         self.api.logger.info(f'Plugin {path} loaded.')
                     else:
+                        self.plugins.append(instance)
                         self.api.logger.warn(f'Plugin {path} not loaded. (DISABLED)')
                     break
         except Exception as e:
@@ -50,12 +51,13 @@ class PluginsLoader:
 
     async def on_event(self, event):
         for plugin in self.plugins:
-            await plugin.on_event(event)
+            if plugin.enabled:
+                await plugin.on_event(event)
 
     async def on_command(self, event, args) -> str:
         for plugin in self.plugins:
             output = await plugin.on_command(event, args)
-            if output != None:
+            if output != None and plugin.enabled:
                 return output
 
         return None
