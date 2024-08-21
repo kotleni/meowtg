@@ -2,7 +2,9 @@ import sys
 import os
 import importlib.util
 from plugin_base import PluginBase
+from plugin_header import PluginHeader
 from const import PLUGINS_FOLDER_PATH
+import traceback
 
 class PluginsLoader:
     api = None
@@ -31,18 +33,24 @@ class PluginsLoader:
             # Find and create an instance of the plugin class
             for name, obj in vars(module).items():
                 if isinstance(obj, type) and issubclass(obj, PluginBase) and obj is not PluginBase:
-                    instance = obj(self.api)
-                    if instance.enabled:
+                    # Load header
+                    header = PluginHeader()
+                    header.loadFromPath(module_path)
+
+                    instance = obj(header, self.api)
+
+                    if header.enabled:
                         await instance.load()
                         self.plugins.append(instance)
 
-                        self.api.logger.info(f'Plugin {path} loaded.')
+                        self.api.logger.info(f'Plugin {header.name} (v{header.versionName}) loaded.')
                     else:
                         self.plugins.append(instance)
-                        self.api.logger.warn(f'Plugin {path} not loaded. (DISABLED)')
+                        self.api.logger.warn(f'Plugin {header.name} (v{header.versionName}) not loaded. (DISABLED)')
                     break
         except Exception as e:
-            self.api.logger.error(f"Error loading {path} plugin: {str(e)}")
+            traceback_str = ''.join(traceback.format_tb(e.__traceback__))
+            self.api.logger.error(f"Error loading {path} plugin: {str(traceback_str)}\n{e}")
 
     async def load_plugins(self):
         files = self.get_plugins_files()
@@ -51,13 +59,13 @@ class PluginsLoader:
 
     async def on_event(self, event):
         for plugin in self.plugins:
-            if plugin.enabled:
+            if plugin.header.enabled:
                 await plugin.on_event(event)
 
     async def on_command(self, event, args) -> str:
         for plugin in self.plugins:
             output = await plugin.on_command(event, args)
-            if output != None and plugin.enabled:
+            if output != None and plugin.header.enabled:
                 return output
 
         return None

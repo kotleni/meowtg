@@ -1,10 +1,12 @@
+from plugin_header import PluginHeader
+
 class PluginBase:
     api = None
 
-    description = ""
-    enabled = False
+    header: PluginHeader = None
 
-    def __init__(self, api) -> None:
+    def __init__(self, header, api) -> None:
+        self.header = header
         self.api = api
 
     async def load(self):
