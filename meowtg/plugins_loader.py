@@ -52,6 +52,19 @@ class PluginsLoader:
             traceback_str = ''.join(traceback.format_tb(e.__traceback__))
             self.api.logger.error(f"Error loading {path} plugin: {str(traceback_str)}\n{e}")
 
+    async def unload_plugin(self, name):
+        all = self.get_loaded_plugins()
+        plugin = None
+        for _plugin in all:
+            if _plugin.header.name == name:
+                plugin = _plugin
+
+        if plugin == None:
+            return False
+        
+        self.plugins.remove(plugin)
+        return True
+
     async def load_plugins(self):
         files = self.get_plugins_files()
         for path in files:
