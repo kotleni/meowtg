@@ -60,9 +60,11 @@ class PluginsLoader:
                 plugin = _plugin
 
         if plugin == None:
+            self.api.logger.info('Can\'t unload because plugin {} is not loaded.'.format(name))
             return False
         
         self.plugins.remove(plugin)
+        self.api.logger.info('Unloaded plugin {}.'.format(name))
         return True
 
     async def load_plugins(self):
