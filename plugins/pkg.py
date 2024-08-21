@@ -108,6 +108,16 @@ class Pkg(PluginBase):
                     await self.pluginsManager.loader.load_plugin(args[2])
 
                     return 'Installed and loaded {} plugin.'.format(args[2])
+            elif args[1] == 'remove':
+                if len(args) < 3:
+                    return 'Usage: .pkg remove <name>'
+                path = '{}/{}.py'.format(self.pluginsManager.loader.folder_path, args[2])
+                if os.path.isfile(path):
+                    await self.pluginsManager.loader.unload_plugin(args[2])
+                    os.remove(path)
+                    return 'Success removed plugin.'
+                else:
+                    return 'Plugin is not exist.'
             else:
                 return 'Unknown sub-command.'
             
