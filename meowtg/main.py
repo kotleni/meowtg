@@ -64,7 +64,11 @@ async def log_message(event):
 
         if result == None:
             result = "Unknown command"
-        await client.edit_message(chat, message, f'{message_text}\n-------\n{result}', parse_mode='html')
+        
+        if result.startswith(COMMAND_OK_MESSAGE_REPLY):
+            await client.send_message(chat, f'{result.replace(COMMAND_OK_MESSAGE_REPLY, '')}', reply_to=message.id, parse_mode='html')
+        else:
+            await client.edit_message(chat, message, f'{message_text}\n-------\n{result}', parse_mode='html')
     else:
         await plugins_loader.on_event(event)
 
