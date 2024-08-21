@@ -86,6 +86,10 @@ async def main():
     api.register_plugins_loader(plugins_loader)
 
     logger.info("Loading plugins...")
+    
+    # Force load pkg as plugins
+    await plugins_loader.load_plugin('../meowtg/pkg.py')
+    
     await plugins_loader.load_plugins()
     await client.run_until_disconnected()
 
