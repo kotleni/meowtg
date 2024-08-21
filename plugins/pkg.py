@@ -80,19 +80,19 @@ class Pkg(PluginBase):
     async def on_command(self, event, args):
         if args[0] == 'pkg':
             if len(args) < 2:
-                return 'Usage: .pkg <list|available|install> ...'
+                return '<b>Usage:</b> .pkg <list|available|install> ...'
             elif args[1] == 'list':
                 plugins = self.pluginsManager.get_all()
-                output = 'Installed plugins:\n'
+                output = '<b>Installed plugins:</b>\n'
                 for plug in plugins:
                     output += '\n{} v{}'.format(plug.header.name, plug.header.versionName)
                     if not plug.header.enabled:
-                        output += ' (disabled)'
+                        output += ' <i>(disabled)</i>'
 
                 return output
             elif args[1] == 'remote':
                 all = self.remoteManager.fetch_remote_plugins()
-                output = 'Remote plugins:\n'
+                output = '<b>Remote plugins:</b>\n'
                 for entry in all:
                     local_plug = self.pluginsManager.find(entry['name'])
                     output += '\n{} v{}\n  {}\n  by {}'.format(entry['name'], entry['versionName'], entry['description'], entry['author'])
@@ -119,7 +119,7 @@ class Pkg(PluginBase):
                     return 'Installed and loaded {} plugin.'.format(args[2])
             elif args[1] == 'update':
                 if len(args) < 3:
-                    return 'Usage: .pkg install <name>'
+                    return '<b>Usage:</b> .pkg install <name>'
                 
                 name = args[2]
                 path = '{}/{}.py'.format(self.pluginsManager.loader.folder_path, name)
@@ -150,7 +150,7 @@ class Pkg(PluginBase):
                 
             elif args[1] == 'remove':
                 if len(args) < 3:
-                    return 'Usage: .pkg remove <name>'
+                    return '<b>Usage:</b> .pkg remove <name>'
                 path = '{}/{}.py'.format(self.pluginsManager.loader.folder_path, args[2])
                 if os.path.isfile(path):
                     await self.pluginsManager.loader.unload_plugin(args[2])
