@@ -1,4 +1,6 @@
-<b>🐈MeowTg - A userbot software for telegram with plugins system.</b>
+<b>❌ This is legacy python version of meowtg!</b>
+
+<b>🐈 MeowTg - A userbot software for telegram with plugins system.</b>
 
 ### Features
 * Plugins system
