@@ -7,5 +7,9 @@
 * Full logging
 * ...
 
+### Installing
+TODO
+- Make `storage/` folder in root of project
+
 ### Plugins
 TODO
