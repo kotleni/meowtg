@@ -4,7 +4,7 @@ import CommandsProcessor from "./commands_processor";
 import PluginsProcessor from "./plugins_processor";
 import Message = Api.Message;
 
-export default class Plugins_api {
+export default class PluginsAPI {
     private sessionManager: Session_manager;
     private client: TelegramClient;
     private commandsProcessor: CommandsProcessor;

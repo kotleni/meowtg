@@ -9,11 +9,11 @@ import {readFileSync, writeFileSync} from "fs";
 import {LogLevel} from "telegram/extensions/Logger";
 import * as dotenv from "dotenv";
 import Session_manager from "./session_manager";
-import Base_plugin from "./base_plugin";
+import BasePlugin from "./base_plugin";
 import {readdirSync} from "node:fs";
 import CommandsProcessor from "./commands_processor";
 import PluginsProcessor from "./plugins_processor";
-import Plugins_api from "./plugins_api";
+import PluginsAPI from "./plugins_api";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -25,7 +25,7 @@ class MeowTg {
     client: TelegramClient;
     commandsProcessor: CommandsProcessor;
     pluginsProcessor: PluginsProcessor;
-    pluginsApi: Plugins_api;
+    pluginsApi: PluginsAPI;
 
     async init(sessionManager: Session_manager) {
         console.log("Initializing MeowTG...");
@@ -62,7 +62,7 @@ class MeowTg {
         });
 
         this.pluginsProcessor = new PluginsProcessor();
-        this.pluginsApi = new Plugins_api(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor);
+        this.pluginsApi = new PluginsAPI(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor);
         await this.pluginsProcessor.loadAll(this.pluginsApi); // Load all plugins
     }
 

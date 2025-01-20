@@ -1,18 +1,18 @@
-import Base_plugin from "./base_plugin";
+import BasePlugin from "./base_plugin";
 import {readdirSync} from "node:fs";
-import Plugins_api from "./plugins_api";
+import PluginsAPI from "./plugins_api";
 
 export default class PluginsProcessor {
-    async load(name: string, api: Plugins_api): Promise<Base_plugin> {
+    async load(name: string, api: PluginsAPI): Promise<BasePlugin> {
         const path = `../plugins/${name}.ts`;
         const module = await import(path);
-        const plugin: Base_plugin = new module.default();
+        const plugin: BasePlugin = new module.default();
         plugin.api = api;
         await plugin.onLoad();
         return plugin;
     }
 
-    async loadAll(api: Plugins_api) {
+    async loadAll(api: PluginsAPI) {
         const pluginsFiles = readdirSync("plugins/");
         pluginsFiles.forEach(pluginName => {
             const shortPluginName = pluginName.replace(".ts", "");

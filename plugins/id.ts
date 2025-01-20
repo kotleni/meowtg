@@ -1,14 +1,14 @@
-import Base_plugin from "../meowtg/base_plugin";
-import Plugins_api from "../meowtg/plugins_api";
+import BasePlugin from "../meowtg/base_plugin";
+import PluginsAPI from "../meowtg/plugins_api";
 import {Api} from "telegram";
 import Message = Api.Message;
 import PeerUser = Api.PeerUser;
 import {getDisplayName} from "telegram/Utils";
 
-export default class IdPlugin implements Base_plugin {
+export default class IdPlugin implements BasePlugin {
     name: string = "id";
     description: string = "Get the id of the user.";
-    api: Plugins_api;
+    api: PluginsAPI;
 
     async onLoad() {
         this.api.getCommandsProcessor()
