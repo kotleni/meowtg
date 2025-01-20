@@ -8,7 +8,7 @@ import {getDisplayName} from "telegram/Utils";
 import {readFileSync, writeFileSync} from "fs";
 import {LogLevel} from "telegram/extensions/Logger";
 import * as dotenv from "dotenv";
-import Session_manager from "./session_manager";
+import SessionManager from "./session_manager";
 import BasePlugin from "./base_plugin";
 import {readdirSync} from "node:fs";
 import CommandsProcessor from "./commands_processor";
@@ -21,13 +21,13 @@ const rl = readline.createInterface({
 });
 
 class MeowTg {
-    sessionManager: Session_manager;
+    sessionManager: SessionManager;
     client: TelegramClient;
     commandsProcessor: CommandsProcessor;
     pluginsProcessor: PluginsProcessor;
     pluginsApi: PluginsAPI;
 
-    async init(sessionManager: Session_manager) {
+    async init(sessionManager: SessionManager) {
         console.log("Initializing MeowTG...");
 
         // Load .env config
@@ -37,7 +37,7 @@ class MeowTg {
             return;
         }
 
-        this.sessionManager = new Session_manager();
+        this.sessionManager = new SessionManager();
 
         // Initialize telegram client
         const clientParams = {
@@ -115,7 +115,7 @@ class MeowTg {
 // Main
 (async () => {
     const meowtg = new MeowTg();
-    const sessionManager = new Session_manager();
+    const sessionManager = new SessionManager();
     await meowtg.init(sessionManager);
     await meowtg.start();
 })();
