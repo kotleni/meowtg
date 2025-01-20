@@ -8,46 +8,26 @@ import {getDisplayName} from "telegram/Utils";
 import {readFileSync, writeFileSync} from "fs";
 import {LogLevel} from "telegram/extensions/Logger";
 import * as dotenv from "dotenv";
-import SessionManager from "./sessionmanager";
+import Session_manager from "./session_manager";
+import Base_plugin from "./base_plugin";
+import {readdirSync} from "node:fs";
+import CommandsProcessor from "./commands_processor";
+import PluginsProcessor from "./plugins_processor";
+import Plugins_api from "./plugins_api";
 
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-interface Command {
-    name: string;
-    description: string;
-    callback: () => void;
-}
-
-class CommandsProcessor {
-    private registered_commands: Command[] = [];
-
-    register(name: string, description: string, callback: () => void) {
-        const command = { name: name, description: description, callback: callback };
-        this.registered_commands.push(command);
-
-        console.log(`Registered command: ${command.name}`);
-    }
-
-    unregister(name: string): void {
-        this.registered_commands = this.registered_commands.filter(command => command.name === name);
-
-        console.log(`Unregistered command: ${this.registered_commands.length}`);
-    }
-
-    find_command(name: string): Command {
-        return this.registered_commands.find((command) => command.name === name);
-    }
-}
-
 class MeowTg {
-    sessionManager: SessionManager;
+    sessionManager: Session_manager;
     client: TelegramClient;
     commandsProcessor: CommandsProcessor;
+    pluginsProcessor: PluginsProcessor;
+    pluginsApi: Plugins_api;
 
-    async init(sessionManager: SessionManager) {
+    async init(sessionManager: Session_manager) {
         console.log("Initializing MeowTG...");
 
         // Load .env config
@@ -57,7 +37,7 @@ class MeowTg {
             return;
         }
 
-        this.sessionManager = new SessionManager();
+        this.sessionManager = new Session_manager();
 
         // Initialize telegram client
         const clientParams = {
@@ -77,9 +57,13 @@ class MeowTg {
         this.client.addEventHandler((event: NewMessageEvent) => this.onMessage(event), new NewMessage({}));
 
         this.commandsProcessor = new CommandsProcessor();
-        this.commandsProcessor.register('plug', 'Manage plugins.', () => {
+        this.commandsProcessor.register('plug', 'Manage plugins.', (args, message) => {
             console.log("Not implemented yet.");
         });
+
+        this.pluginsProcessor = new PluginsProcessor();
+        this.pluginsApi = new Plugins_api(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor);
+        await this.pluginsProcessor.loadAll(this.pluginsApi); // Load all plugins
     }
 
     async start(): Promise<void> {
@@ -111,8 +95,18 @@ class MeowTg {
 
             // Check if command
             if (message.text.startsWith(".")) {
-                const command = this.commandsProcessor.find_command(message.text.slice(1));
-                command.callback(); // Execute
+                const args = message.text.split(" ");
+                const commandName = args[0].slice(1);
+                const command = this.commandsProcessor.find_command(commandName);
+                if(command) {
+                    command.callback(args, message); // Execute
+                } else {
+                    console.log(`Command not found: ${message.text}`);
+                    await this.client.sendMessage(sender, {
+                        message: `Unknown command <b>${commandName}</b>`,
+                        parseMode: 'html'
+                    });
+                }
             }
         }
     }
@@ -121,7 +115,7 @@ class MeowTg {
 // Main
 (async () => {
     const meowtg = new MeowTg();
-    const sessionManager = new SessionManager();
+    const sessionManager = new Session_manager();
     await meowtg.init(sessionManager);
     await meowtg.start();
 })();
