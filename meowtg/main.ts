@@ -15,9 +15,33 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
+interface Command {
+    name: string;
+    description: string;
+    callback: () => void;
+}
+
+class CommandsProcessor {
+    private registered_commands: Command[] = [];
+
+    register(name: string, description: string, callback: () => void) {
+        const command = { name: name, description: description, callback: callback };
+        this.registered_commands.push(command);
+    }
+
+    unregister(name: string): void {
+        this.registered_commands = this.registered_commands.filter(command => command.name === name);
+    }
+
+    find_command(name: string): Command {
+        return this.registered_commands.find((command) => command.name === name);
+    }
+}
+
 class MeowTg {
     sessionManager: SessionManager;
     client: TelegramClient;
+    commandsProcessor: CommandsProcessor;
 
     async init(sessionManager: SessionManager) {
         console.log("Initializing MeowTG...");
@@ -46,7 +70,12 @@ class MeowTg {
             process.env.TG_APP_HASH,
             clientParams
         );
-        this.client.addEventHandler(this.onMessage, new NewMessage({}));
+        this.client.addEventHandler((event: NewMessageEvent) => this.onMessage(event), new NewMessage({}));
+
+        this.commandsProcessor = new CommandsProcessor();
+        this.commandsProcessor.register('plug', 'Manage plugins.', () => {
+            console.log("Not implemented yet.");
+        });
     }
 
     async start(): Promise<void> {
@@ -76,12 +105,10 @@ class MeowTg {
             const name = getDisplayName(sender);
             console.log(`${name}: ${message.text}`);
 
-            // TODO: Impl commands registering
-            if (message.text == "!test") {
-                const sender = await message.getSender();
-                await this.client.sendMessage(sender, {
-                    message: `hi your id is ${message.senderId}`,
-                });
+            // Check if command
+            if (message.text.startsWith(".")) {
+                const command = this.commandsProcessor.find_command(message.text.slice(1));
+                command.callback(); // Execute
             }
         }
     }
