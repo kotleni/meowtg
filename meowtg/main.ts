@@ -11,7 +11,7 @@ import CommandsProcessor from "./commands_processor";
 import ConfigurationWizard from "./configuration_wizard";
 import PluginsProcessor from "./plugins/plugins_processor";
 import PluginsAPI from "./plugins/plugins_api";
-import { parseArguments } from "./utils";
+import {isPrivateMessageNotMine, parseArguments} from "./utils";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -25,6 +25,7 @@ class MeowTg {
     commandsProcessor: CommandsProcessor;
     pluginsProcessor: PluginsProcessor;
     pluginsApi: PluginsAPI;
+    mineId: string;
 
     async init(sessionManager: SessionManager) {
         console.log("Initializing MeowTG...");
@@ -88,6 +89,7 @@ class MeowTg {
         await this.sessionManager.save(sessionString);
 
         const me = await this.client.getEntity("me");
+        this.mineId = me.id.toString();
         console.log(`User loaded: ${getDisplayName(me)}`);
     }
 
@@ -100,7 +102,7 @@ class MeowTg {
             console.log(`${name}: ${message.text}`);
 
             // Check if command
-            if (message.text.startsWith(".")) {
+            if (message.text.startsWith(".") && message.senderId.toString() == this.mineId) {
                 const args = parseArguments(message.text);
                 const commandName = args[0].slice(1);
                 const command = this.commandsProcessor.find_command(commandName);
@@ -113,6 +115,8 @@ class MeowTg {
                         parseMode: 'html'
                     });
                 }
+            } else {
+                await this.pluginsProcessor.invokeAllMessagesListeners(message);
             }
         }
     }

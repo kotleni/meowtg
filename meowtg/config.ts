@@ -9,7 +9,7 @@ const CONFIG_FILE_EXT = ".json";
  * @todo Impl detecting probles with reading/writing files
  */
 export default class Config<T> {
-    private filePath: string;
+    private readonly filePath: string;
     model: T;
 
     constructor(configName: string, fallback: T) {
@@ -17,12 +17,12 @@ export default class Config<T> {
         this.model = fallback;
     }
 
-    async save(object: T) {
-        const json = JSON.stringify(object);
+    async save() {
+        const json = JSON.stringify(this.model);
         fs.writeFileSync(this.filePath, JSON.stringify(json));
     }
 
-    async load(fallback: T): Promise<void> {
+    async load(): Promise<void> {
         if(!fs.existsSync(this.filePath)) return;
 
         const content = fs.readFileSync(this.filePath);

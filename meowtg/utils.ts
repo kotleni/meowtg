@@ -1,3 +1,6 @@
+import {Api} from "telegram";
+import Message = Api.Message;
+
 /**
  * Parse string as arguments with detecting quotes
  * @param line String with spaces and '"' quotes
@@ -39,4 +42,8 @@ function parseArguments(line: string): string[] {
     return args;
 }
 
-export { parseArguments };
+function isPrivateMessageNotMine(message: Message): boolean {
+    return message.chatId.toString() === message.fromId.toString();
+}
+
+export { parseArguments, isPrivateMessageNotMine };
