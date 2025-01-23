@@ -10,9 +10,11 @@ const CONFIG_FILE_EXT = ".json";
  */
 export default class Config<T> {
     private filePath: string;
+    model: T;
 
-    constructor(configName: string) {
+    constructor(configName: string, fallback: T) {
         this.filePath = `${CONFIG_FILE_PREFIX}${configName}${CONFIG_FILE_EXT}`;
+        this.model = fallback;
     }
 
     async save(object: T) {
@@ -20,11 +22,10 @@ export default class Config<T> {
         fs.writeFileSync(this.filePath, JSON.stringify(json));
     }
 
-    async load(fallback: T): Promise<T> {
-        if(!fs.existsSync(this.filePath)) {
-            return fallback;
-        }
+    async load(fallback: T): Promise<void> {
+        if(!fs.existsSync(this.filePath)) return;
+
         const content = fs.readFileSync(this.filePath);
-        return JSON.parse(content.toString()) as T;
+        this.model = JSON.parse(content.toString()) as T;
     }
 }
