@@ -15,6 +15,7 @@ import CommandsProcessor from "./commands_processor";
 import PluginsProcessor from "./plugins_processor";
 import PluginsAPI from "./plugins_api";
 import ConfigurationWizard from "./configuration_wizard";
+import RepoInfo from "./plugins/repo_info";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -69,9 +70,6 @@ class MeowTg {
         this.client.addEventHandler((event: NewMessageEvent) => this.onMessage(event), new NewMessage({}));
 
         this.commandsProcessor = new CommandsProcessor();
-        this.commandsProcessor.register('plug', 'Manage plugins.', (args, message) => {
-            console.log("Not implemented yet.");
-        });
 
         this.pluginsProcessor = new PluginsProcessor();
         this.pluginsApi = new PluginsAPI(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor);
@@ -111,7 +109,7 @@ class MeowTg {
                 const commandName = args[0].slice(1);
                 const command = this.commandsProcessor.find_command(commandName);
                 if(command) {
-                    command.callback(args, message); // Execute
+                    await command.callback(args, message); // Execute
                 } else {
                     console.log(`Command not found: ${message.text}`);
                     await this.client.sendMessage(sender, {

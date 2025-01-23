@@ -5,7 +5,7 @@ import Message = Api.Message;
 export default class CommandsProcessor {
     private registered_commands: Command[] = [];
 
-    register(name: string, description: string, callback: (args: string[], message: Message) => void) {
+    async register(name: string, description: string, callback: (args: string[], message: Message) => Promise<void>) {
         const command = { name: name, description: description, callback: callback };
         this.registered_commands.push(command);
 
