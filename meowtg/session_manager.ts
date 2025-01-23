@@ -6,7 +6,7 @@ const SESSION_FILE_PATH: string = "storage/session";
 /**
  * Session manager for telegram session string
  */
-export default class SessionManager {
+export default class Session_manager {
     async save(sessionString: string) {
         writeFileSync(SESSION_FILE_PATH, sessionString, { flag: "w" })
     }
