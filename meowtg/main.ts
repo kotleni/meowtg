@@ -1,21 +1,17 @@
 import {Logger} from "telegram/extensions";
 import {Api, TelegramClient} from "telegram";
-import {StringSession} from "telegram/sessions";
 import {NewMessage} from "telegram/events";
 import {NewMessageEvent} from "telegram/events/NewMessage";
 import * as readline from 'readline/promises';
 import {getDisplayName} from "telegram/Utils";
-import {readFileSync, writeFileSync} from "fs";
 import {LogLevel} from "telegram/extensions/Logger";
 import * as dotenv from "dotenv";
 import SessionManager from "./session_manager";
-import BasePlugin from "./base_plugin";
-import {readdirSync} from "node:fs";
 import CommandsProcessor from "./commands_processor";
-import PluginsProcessor from "./plugins_processor";
-import PluginsAPI from "./plugins_api";
 import ConfigurationWizard from "./configuration_wizard";
-import RepoInfo from "./plugins/repo_info";
+import PluginsProcessor from "./plugins/plugins_processor";
+import PluginsAPI from "./plugins/plugins_api";
+import { parseArguments } from "./utils";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -105,7 +101,7 @@ class MeowTg {
 
             // Check if command
             if (message.text.startsWith(".")) {
-                const args = message.text.split(" ");
+                const args = parseArguments(message.text);
                 const commandName = args[0].slice(1);
                 const command = this.commandsProcessor.find_command(commandName);
                 if(command) {

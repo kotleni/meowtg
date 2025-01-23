@@ -4,7 +4,7 @@ import PluginsAPI from "./plugins_api";
 
 export default class PluginsProcessor {
     async load(name: string, api: PluginsAPI): Promise<BasePlugin> {
-        const path = `../plugins/${name}.ts`;
+        const path = `../../plugins/${name}.ts`;
         const module = await import(path);
         const plugin: BasePlugin = new module.default();
         plugin.api = api;

@@ -1,5 +1,5 @@
-import BasePlugin from "../meowtg/base_plugin";
-import PluginsAPI from "../meowtg/plugins_api";
+import BasePlugin from "../meowtg/plugins/base_plugin";
+import PluginsAPI from "../meowtg/plugins/plugins_api";
 import {Api} from "telegram";
 import Message = Api.Message;
 import PeerUser = Api.PeerUser;
