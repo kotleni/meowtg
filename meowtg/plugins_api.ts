@@ -35,6 +35,6 @@ export default class PluginsAPI {
 
     async showResult(message: Message, output: String) {
         await this.getTelegramClient()
-            .editMessage(message.chatId, { message: message.id, text: `${message.text}\n--------\n${output}` })
+            .editMessage(message.chatId, { message: message.id, text: `${message.text}\n--------\n${output}`, parseMode: "html" })
     }
 }
