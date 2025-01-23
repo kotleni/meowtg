@@ -14,6 +14,7 @@ import {readdirSync} from "node:fs";
 import CommandsProcessor from "./commands_processor";
 import PluginsProcessor from "./plugins_processor";
 import PluginsAPI from "./plugins_api";
+import ConfigurationWizard from "./configuration_wizard";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -21,6 +22,7 @@ const rl = readline.createInterface({
 });
 
 class MeowTg {
+    configurationWizard: ConfigurationWizard;
     sessionManager: SessionManager;
     client: TelegramClient;
     commandsProcessor: CommandsProcessor;
@@ -29,6 +31,16 @@ class MeowTg {
 
     async init(sessionManager: SessionManager) {
         console.log("Initializing MeowTG...");
+
+        // Configuration wizard
+        this.configurationWizard = new ConfigurationWizard();
+        if(this.configurationWizard.isNeeded()) { // Check if configuration is needed
+            const isDone = await this.configurationWizard.run(rl);
+            if(!isDone) {
+                console.log("FATAL ERROR! Configuration wizard is canceled!");
+                process.exit(1); // Exit
+            }
+        }
 
         // Load .env config
         // TODO: Need to check also all if values is exist and valid
