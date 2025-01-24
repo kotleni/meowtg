@@ -71,6 +71,9 @@ export default class PkgPlugin implements BasePlugin {
             case "remove":
                 await this.onRemovePlugin(message, args[2]);
                 break;
+            case "install":
+                await this.onInstallPlugin(message, args[2]);
+                break;
         }
     }
 
@@ -126,5 +129,45 @@ export default class PkgPlugin implements BasePlugin {
         } else {
             await this.api.showResult(message, `Error: Plugin ${pluginName} not exist.`);
         }
+    }
+
+    private async onInstallPlugin(message: Message, pluginName: string) {
+        // Find plugin
+        const repos = await this.repositoriesClient.loadRepositoriesInfo();
+
+        let repoUrl: string = undefined;
+        let pluginInfo: PluginInfo = undefined;
+
+        for(const repo of repos) {
+            const plugins = await this.repositoriesClient.fetchRepositoryPlugins(repo);
+            for(const plugin of plugins) {
+                if(plugin.name === pluginName) {
+                    pluginInfo = plugin;
+                    repoUrl = repo.url;
+                }
+            }
+        }
+
+        if(!pluginInfo) {
+            await this.api.showResult(message, "Cannot fetch plugin info.");
+            return;
+        }
+
+        // Download plugin
+        const pluginUrl = `${repoUrl}/${pluginInfo.name}.ts`;
+        const res = await fetch(`${pluginUrl}`, {});
+        const content  = await res.text();
+
+        // Write/install plugin
+        const isSuccess = await this.localPluginsService.addPlugin(pluginName, content);
+        if(!isSuccess) {
+            await this.api.showResult(message, "Cannot install plugin.");
+            return;
+        }
+
+        // Load plugin
+        await this.api.pluginsProcessor.load(pluginName, this.api);
+
+        await this.api.showResult(message, "Plugin successfully installed.");
     }
 }
