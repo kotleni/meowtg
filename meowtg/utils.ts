@@ -47,7 +47,7 @@ function isMyMessage(message: Message): boolean {
 }
 
 async function showResult(message: Message, output: string) {
-    await message.client.editMessage(message.chatId, { message: message.id, text: output, parseMode: "html" })
+    await message.client.editMessage(message.peerId, { message: message.id, text: output, parseMode: "html" });
 }
 
 export { parseArguments, isMyMessage, showResult };
