@@ -6,3 +6,5 @@ package-lock.json
 
 plugins/*
 !plugins/pkg.ts
+
+.idea/
