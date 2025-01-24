@@ -11,7 +11,7 @@ import CommandsProcessor from "./command/commandsProcessor";
 import ConfigurationWizard from "./wizard/configurationWizard";
 import PluginsProcessor from "./plugin/pluginsProcessor";
 import PluginsAPI from "./plugin/pluginsApi";
-import {isPrivateMessageNotMine, parseArguments} from "./utils";
+import {parseArguments} from "./utils";
 
 const rl = readline.createInterface({
     input: process.stdin,

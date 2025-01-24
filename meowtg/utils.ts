@@ -42,8 +42,8 @@ function parseArguments(line: string): string[] {
     return args;
 }
 
-function isPrivateMessageNotMine(message: Message): boolean {
-    return message.chatId.toString() === message.fromId.toString();
+function isMyMessage(message: Message): boolean {
+    return message.chatId.toString() !== message.senderId.toString();
 }
 
-export { parseArguments, isPrivateMessageNotMine };
+export { parseArguments, isMyMessage };
