@@ -1,10 +1,10 @@
 import BasePlugin from "../meowtg/plugin/basePlugin";
-import PluginsAPI from "../meowtg/plugin/pluginsApi";
 import {Api} from "telegram";
 import RepoInfo from "../meowtg/plugin/repoInfo";
 import PluginInfo from "../meowtg/plugin/pluginInfo";
 import * as fs from "node:fs";
 import Message = Api.Message;
+import {showResult} from "../meowtg/utils";
 
 const PLUGINS_FOLDER_PATH = "./plugins";
 
@@ -41,26 +41,26 @@ class LocalPluginsService {
     }
 }
 
-export default class PkgPlugin implements BasePlugin {
+export default class PkgPlugin extends BasePlugin {
     name: string = "pkg";
     description: string = "Plugins (aka packages) manager.";
-    api: PluginsAPI;
+
     repositoriesClient: RepositoriesClient;
     localPluginsService: LocalPluginsService;
 
-    async onLoad() {
+    override async onLoad() {
         this.repositoriesClient = new RepositoriesClient();
         this.localPluginsService = new LocalPluginsService();
 
-        await this.api.commandsProcessor
+        await this.commandsProcessor
             .register(this.name, this.description, (args: string[], message: Message) => this.onCommand(args, message));
     }
 
-    async onUnload() {
+    override async onUnload() {
         this.repositoriesClient = undefined;
         this.localPluginsService = undefined;
 
-        this.api.commandsProcessor.unregister(this.name);
+        this.commandsProcessor.unregister(this.name);
     }
 
     private async onCommand(args: string[], message: Message) {
@@ -95,7 +95,7 @@ export default class PkgPlugin implements BasePlugin {
             string += `\n<b>${repo.name}</b> has <b>${plugins.length}</b> packages.`;
         }
 
-        await this.api.showResult(message, string);
+        await showResult(message, string);
     }
 
     private async onSearchSubCommand(message: Message, query: string) {
@@ -111,7 +111,7 @@ export default class PkgPlugin implements BasePlugin {
             }
         }
 
-        await this.api.showResult(message, string);
+        await showResult(message, string);
     }
 
     private async onListSubCommand(message: Message) {
@@ -120,22 +120,22 @@ export default class PkgPlugin implements BasePlugin {
         for(const plugin of plugins) {
             string += `${plugin}, `;
         }
-        await this.api.showResult(message, string);
+        await showResult(message, string);
     }
 
     private async onRemovePlugin(message: Message, pluginName: string) {
         const plugins = await this.localPluginsService.listInstalled();
         const isExist = plugins.find((pluginNameInstalled) => { return pluginNameInstalled === pluginName; });
         if(isExist) {
-            await this.api.pluginsProcessor.unload(pluginName);
+            await this.pluginsProcessor.unload(pluginName);
             const isRemoved = await this.localPluginsService.removePlugin(pluginName);
             if(isRemoved) {
-                await this.api.showResult(message, `Plugin ${pluginName} successfully removed.`);
+                await showResult(message, `Plugin ${pluginName} successfully removed.`);
             } else {
-                await this.api.showResult(message, `Error: Can't remove plugin.`);
+                await showResult(message, `Error: Can't remove plugin.`);
             }
         } else {
-            await this.api.showResult(message, `Error: Plugin ${pluginName} not exist.`);
+            await showResult(message, `Error: Plugin ${pluginName} not exist.`);
         }
     }
 
@@ -157,7 +157,7 @@ export default class PkgPlugin implements BasePlugin {
         }
 
         if(!pluginInfo) {
-            await this.api.showResult(message, "Cannot fetch plugin info.");
+            await showResult(message, "Cannot fetch plugin info.");
             return;
         }
 
@@ -169,13 +169,19 @@ export default class PkgPlugin implements BasePlugin {
         // Write/install plugin
         const isSuccess = await this.localPluginsService.addPlugin(pluginName, content);
         if(!isSuccess) {
-            await this.api.showResult(message, "Cannot install plugin.");
+            await showResult(message, "Cannot install plugin.");
             return;
         }
 
         // Load plugin
-        await this.api.pluginsProcessor.load(pluginName, this.api);
+        await this.pluginsProcessor.load(
+            pluginName,
+            this.telegramClient,
+            this.sessionManager,
+            this.pluginsProcessor,
+            this.commandsProcessor
+        );
 
-        await this.api.showResult(message, "Plugin successfully installed.");
+        await showResult(message, "Plugin successfully installed.");
     }
 }

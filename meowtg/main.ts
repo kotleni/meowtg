@@ -10,7 +10,6 @@ import SessionManager from "./sessionManager";
 import CommandsProcessor from "./command/commandsProcessor";
 import ConfigurationWizard from "./wizard/configurationWizard";
 import PluginsProcessor from "./plugin/pluginsProcessor";
-import PluginsAPI from "./plugin/pluginsApi";
 import {parseArguments} from "./utils";
 
 const rl = readline.createInterface({
@@ -24,7 +23,6 @@ class MeowTg {
     client: TelegramClient;
     commandsProcessor: CommandsProcessor;
     pluginsProcessor: PluginsProcessor;
-    pluginsApi: PluginsAPI;
     mineId: string;
 
     async init(sessionManager: SessionManager) {
@@ -69,8 +67,7 @@ class MeowTg {
         this.commandsProcessor = new CommandsProcessor();
 
         this.pluginsProcessor = new PluginsProcessor();
-        this.pluginsApi = new PluginsAPI(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor);
-        await this.pluginsProcessor.loadAll(this.pluginsApi); // Load all plugin
+        await this.pluginsProcessor.loadAll(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor); // Load all plugin
     }
 
     async start(): Promise<void> {

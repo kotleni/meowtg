@@ -46,4 +46,8 @@ function isMyMessage(message: Message): boolean {
     return message.chatId.toString() !== message.senderId.toString();
 }
 
-export { parseArguments, isMyMessage };
+async function showResult(message: Message, output: string) {
+    await message.client.editMessage(message.chatId, { message: message.id, text: output, parseMode: "html" })
+}
+
+export { parseArguments, isMyMessage, showResult };
