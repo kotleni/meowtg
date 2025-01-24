@@ -2,7 +2,6 @@ import BasePlugin from "../meowtg/plugins/base_plugin";
 import PluginsAPI from "../meowtg/plugins/plugins_api";
 import {Api} from "telegram";
 import Message = Api.Message;
-import PeerUser = Api.PeerUser;
 import {getDisplayName} from "telegram/Utils";
 
 export default class IdPlugin implements BasePlugin {
@@ -11,7 +10,7 @@ export default class IdPlugin implements BasePlugin {
     api: PluginsAPI;
 
     async onLoad() {
-        this.api.getCommandsProcessor()
+        await this.api.commandsProcessor
             .register(this.name, this.description, (args: string[], message: Message) => this.onIdCommand(args, message));
     }
 

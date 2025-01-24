@@ -10,7 +10,7 @@ export default class TmpMsgPlugin implements BasePlugin {
     api: PluginsAPI;
 
     async onLoad() {
-        this.api.getCommandsProcessor()
+        await this.api.commandsProcessor
             .register(this.name, this.description, (args: string[], message: Message) => this.onCommand(args, message));
     }
 
@@ -19,9 +19,9 @@ export default class TmpMsgPlugin implements BasePlugin {
         const time = Number.parseInt(args[1]);
         const text = args[2];
 
-        await this.api.getTelegramClient()
+        await this.api.telegramClient
             .editMessage(message.chatId, { message: message.id, text: text });
         await sleep(1000 * time);
-        await this.api.getTelegramClient().deleteMessages(message.chat, [message.id], { revoke: true });
+        await this.api.telegramClient.deleteMessages(message.chat, [message.id], { revoke: true });
     }
 }

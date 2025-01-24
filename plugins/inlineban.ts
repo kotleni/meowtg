@@ -2,10 +2,7 @@ import BasePlugin from "../meowtg/plugins/base_plugin";
 import PluginsAPI from "../meowtg/plugins/plugins_api";
 import {Api} from "telegram";
 import Message = Api.Message;
-import PeerUser = Api.PeerUser;
-import {getDisplayName} from "telegram/Utils";
 import Config from "../meowtg/config";
-import {isPrivateMessageNotMine} from "../meowtg/utils";
 
 interface StorePluginConfig {
     bannedIds: string[];
@@ -31,9 +28,9 @@ export default class InlineBanPlugin implements BasePlugin {
         this.config = new Config(this.name, fallback);
         await this.config.load();
 
-        await this.api.getCommandsProcessor().register("iban", this.description, (args: string[], message: Message) => this.onBanCommand(args, message));
-        await this.api.getCommandsProcessor().register("ipardon", this.description, (args: string[], message: Message) => this.onPardonCommand(args, message));
-        this.api.getPluginsProcessor().registerMessagesListener((message: Message) => this.onMessage(message));
+        await this.api.commandsProcessor.register("iban", this.description, (args: string[], message: Message) => this.onBanCommand(args, message));
+        await this.api.commandsProcessor.register("ipardon", this.description, (args: string[], message: Message) => this.onPardonCommand(args, message));
+        this.api.pluginsProcessor.registerMessagesListener((message: Message) => this.onMessage(message));
     }
 
     private async onMessage(message: Message): Promise<void> {
@@ -41,11 +38,11 @@ export default class InlineBanPlugin implements BasePlugin {
 
         const targetId = message.chatId;
         if(this.config.model.bannedIds.find(id => id == targetId.toString())) {
-            await this.api.getTelegramClient().deleteMessages(message.chatId, [message.id], {});
+            await this.api.telegramClient.deleteMessages(message.chatId, [message.id], {});
 
             const warningInfo = this.lastWarnings.find(warning => warning.id === targetId.toString());
             if(!warningInfo || Date.now() - warningInfo.time > WARNING_COOLDOWN_MS) {
-                await this.api.getTelegramClient().sendMessage(message.chatId, {message: this.config.model.warningMessage});
+                await this.api.telegramClient.sendMessage(message.chatId, {message: this.config.model.warningMessage});
                 this.lastWarnings.push({ id: targetId.toString(), time: Date.now() });
             }
         }

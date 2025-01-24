@@ -2,8 +2,6 @@ import BasePlugin from "../meowtg/plugins/base_plugin";
 import PluginsAPI from "../meowtg/plugins/plugins_api";
 import {Api} from "telegram";
 import Message = Api.Message;
-import PeerUser = Api.PeerUser;
-import {getDisplayName} from "telegram/Utils";
 import RepoInfo from "../meowtg/plugins/repo_info";
 import PluginInfo from "../meowtg/plugins/plugin_info";
 import * as fs from "node:fs";
@@ -34,7 +32,7 @@ export default class PkgPlugin implements BasePlugin {
     async onLoad() {
         this.repositoriesClient = new RepositoriesClient();
 
-        this.api.getCommandsProcessor()
+        await this.api.commandsProcessor
             .register(this.name, this.description, (args: string[], message: Message) => this.onCommand(args, message));
     }
 

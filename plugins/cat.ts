@@ -1,9 +1,7 @@
 import BasePlugin from "../meowtg/plugins/base_plugin";
 import PluginsAPI from "../meowtg/plugins/plugins_api";
-import {Api, utils} from "telegram";
+import {Api} from "telegram";
 import Message = Api.Message;
-import PeerUser = Api.PeerUser;
-import {getDisplayName} from "telegram/Utils";
 import InputDocumentFileLocation = Api.InputDocumentFileLocation;
 
 export default class CatPlugin implements BasePlugin {
@@ -12,7 +10,7 @@ export default class CatPlugin implements BasePlugin {
     api: PluginsAPI;
 
     async onLoad() {
-        this.api.getCommandsProcessor()
+        await this.api.commandsProcessor
             .register(this.name, this.description, (args: string[], message: Message) => this.onIdCommand(args, message));
     }
 
@@ -20,7 +18,7 @@ export default class CatPlugin implements BasePlugin {
         if(message.replyTo) { // If reply
             const replyMessage = await message.getReplyMessage();
             const doc = replyMessage.document;
-            const content = await this.api.getTelegramClient().downloadFile(new InputDocumentFileLocation({
+            const content = await this.api.telegramClient.downloadFile(new InputDocumentFileLocation({
                 id: doc.id,
                 accessHash: doc.accessHash,
                 fileReference: doc.fileReference,
