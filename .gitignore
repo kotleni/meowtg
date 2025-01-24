@@ -3,3 +3,6 @@ storage/cfg*
 node_modules/
 package-lock.json
 .env
+
+plugins/*
+!plugins/pkg.ts
