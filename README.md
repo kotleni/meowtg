@@ -12,14 +12,14 @@
 sudo pacman -Sy nodejs npm git
 git clone https://github.com/kotleni/meowtg
 cd meowtg
-npm i📱
+npm i
 npm run dev
 ```
 And after just follow instructions in command line.<br>
 <i>It's should be similar on another Linux Distributions.</i>
 
 ### 🚫 Installing on Windows
-I really idk about working this on Windows, i think some plugins can't be broken.
+I don't really know how it will work on Windows, I think some plugins can be broken.
 
 ### 📱 Other
 <a href="https://github.com/kotleni/meowtg-plugins/tree/main/official">Release plugins repo</a><br>
