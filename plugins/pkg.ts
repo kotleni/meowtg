@@ -56,6 +56,13 @@ export default class PkgPlugin implements BasePlugin {
             .register(this.name, this.description, (args: string[], message: Message) => this.onCommand(args, message));
     }
 
+    async onUnload() {
+        this.repositoriesClient = undefined;
+        this.localPluginsService = undefined;
+
+        this.api.commandsProcessor.unregister(this.name);
+    }
+
     private async onCommand(args: string[], message: Message) {
         const operation = args[1];
         switch (operation) {
@@ -120,6 +127,7 @@ export default class PkgPlugin implements BasePlugin {
         const plugins = await this.localPluginsService.listInstalled();
         const isExist = plugins.find((pluginNameInstalled) => { return pluginNameInstalled === pluginName; });
         if(isExist) {
+            await this.api.pluginsProcessor.unload(pluginName);
             const isRemoved = await this.localPluginsService.removePlugin(pluginName);
             if(isRemoved) {
                 await this.api.showResult(message, `Plugin ${pluginName} successfully removed.`);

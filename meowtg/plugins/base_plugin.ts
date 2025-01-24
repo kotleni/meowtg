@@ -7,5 +7,5 @@ export default interface BasePlugin {
                      // But also will be set as null after onUnload call
 
     onLoad: () => Promise<void>;
-    //onUnload: () => Promise<void>;
+    onUnload: () => Promise<void>;
 }
