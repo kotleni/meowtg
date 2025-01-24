@@ -40,18 +40,41 @@ export default class PkgPlugin implements BasePlugin {
         const operation = args[1];
         switch (operation) {
             case "stats":
-                let string = "Repositories statistics:";
-                const repos = await this.repositoriesClient.loadRepositoriesInfo();
-
-                for(const repo of repos) {
-                    // console.log(`Repo: ${repo.name}`);
-                    const plugins = await this.repositoriesClient.fetchRepositoryPlugins(repo);
-                    // TODO: Detect is repo return error
-                    string += `\n<b>${repo.name}</b> has <b>${plugins.length}</b> packages.`;
-                }
-
-                await this.api.showResult(message, string);
+                await this.onStatsSubCommand(message);
+                break;
+            case "search":
+                await this.onSearchSubCommand(message, args[2]);
                 break;
         }
+    }
+
+    private async onStatsSubCommand(message: Message) {
+        let string = "Repositories statistics:";
+        const repos = await this.repositoriesClient.loadRepositoriesInfo();
+
+        for(const repo of repos) {
+            // console.log(`Repo: ${repo.name}`);
+            const plugins = await this.repositoriesClient.fetchRepositoryPlugins(repo);
+            // TODO: Detect is repo return error
+            string += `\n<b>${repo.name}</b> has <b>${plugins.length}</b> packages.`;
+        }
+
+        await this.api.showResult(message, string);
+    }
+
+    private async onSearchSubCommand(message: Message, query: string) {
+        let string = "Result:";
+        const repos = await this.repositoriesClient.loadRepositoriesInfo();
+
+        for(const repo of repos) {
+            const plugins = await this.repositoriesClient.fetchRepositoryPlugins(repo);
+            for(const plugin of plugins) {
+                if(plugin.name.includes(query)) {
+                    string += `\n<b>${repo.name}/${plugin.name}</b> - <b>${plugin.description}</b>`;
+                }
+            }
+        }
+
+        await this.api.showResult(message, string);
     }
 }
