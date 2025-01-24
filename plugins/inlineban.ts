@@ -4,10 +4,7 @@ import {Api} from "telegram";
 import Message = Api.Message;
 import Config from "../meowtg/config";
 
-interface StorePluginConfig {
-    bannedIds: string[];
-    warningMessage: string;
-}
+type StorePluginConfig = { bannedIds: string[]; warningMessage: string; }
 
 interface SendWarningInfo {
     id: string;

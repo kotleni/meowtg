@@ -15,11 +15,13 @@ export default class Config<T> {
     constructor(configName: string, fallback: T) {
         this.filePath = `${CONFIG_FILE_PREFIX}${configName}${CONFIG_FILE_EXT}`;
         this.model = fallback;
+
+        console.log(`Opened configuration file ${configName}`);
     }
 
     async save() {
         const json = JSON.stringify(this.model);
-        fs.writeFileSync(this.filePath, JSON.stringify(json));
+        fs.writeFileSync(this.filePath, json);
     }
 
     async load(): Promise<void> {
