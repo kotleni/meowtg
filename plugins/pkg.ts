@@ -81,6 +81,9 @@ export default class PkgPlugin extends BasePlugin {
             case "install":
                 await this.onInstallPlugin(message, args[2]);
                 break;
+            default:
+                await showResult(message, "Usage: <code>.pkg [stats|search|list|remove|install] [query|nothing]</code>");
+                break;
         }
     }
 
