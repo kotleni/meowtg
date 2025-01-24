@@ -1,13 +1,27 @@
-<b>🐈MeowTg - A userbot software for telegram with plugins system.</b>
+<b>🐈 MeowTg - A typescript user-bot software for telegram with dynamic plugins system.</b>
 
-### Features
-* Plugins system
-* Plugins remote repository and management
-* Setup wizard
-* Full logging
-* venv install and run scripts
+### 😌 Features
+* 📦 Plugins system
+* 💾 Plugins management (by .pkg command)
+* 🌎 Online plugins repositories
+* 📋 Configuration wizard
+* 🧹 Zero default behavior
 
-### Plugins
-This repo contains all default plugins in <a href="https://github.com/kotleni/meowtg/tree/master/plugins">plugins/</a> folder.<br>
-Also default .pkg manager use this repository: <a href='https://github.com/kotleni/meowtg-plugins'>kotleni/meowtg-plugins</a>.<br>
-But you can write any plugins by-self, at this time project haven't documentation for it.
+### 💻 Installing on Arch Linux
+```
+sudo pacman -Sy nodejs npm git
+git clone https://github.com/kotleni/meowtg
+cd meowtg
+npm i📱
+npm run dev
+```
+And after just follow instructions in command line.<br>
+<i>It's should be similar on another Linux Distributions.</i>
+
+### 🚫 Installing on Windows
+I really idk about working this on Windows, i think some plugins can't be broken.
+
+### 📱 Other
+<a href="https://github.com/kotleni/meowtg-plugins/tree/main/official">Release plugins repo</a><br>
+<a href="https://github.com/kotleni/meowtg-plugins/tree/main/official">Testing plugins repo</a><br>
+<a href="https://github.com/kotleni/meowtg-plugins/blob/main/official/id.ts">Plugin example</a>

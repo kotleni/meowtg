@@ -1,11 +1,10 @@
-# critical!
-tg.session
-tg.session-journal
-config.json
-logs/
-assets/
+storage/session
+storage/cfg*
+node_modules/
+package-lock.json
+.env
 
-# stuff
-__pycache__/
-env/
-plugins/__pycache__/
+plugins/*
+!plugins/pkg.ts
+
+.idea/

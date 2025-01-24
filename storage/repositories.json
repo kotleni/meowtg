@@ -1,0 +1,4 @@
+[
+  { "name" :  "official", "url" :  "https://raw.githubusercontent.com/kotleni/meowtg-plugins/refs/heads/main/official/"},
+  { "name" :  "testing", "url" :  "https://raw.githubusercontent.com/kotleni/meowtg-plugins/refs/heads/main/testing/"}
+]
