@@ -1,10 +1,12 @@
 import BasePlugin from "../meowtg/plugins/base_plugin";
 import PluginsAPI from "../meowtg/plugins/plugins_api";
 import {Api} from "telegram";
-import Message = Api.Message;
 import RepoInfo from "../meowtg/plugins/repo_info";
 import PluginInfo from "../meowtg/plugins/plugin_info";
 import * as fs from "node:fs";
+import Message = Api.Message;
+
+const PLUGINS_FOLDER_PATH = "./plugins";
 
 class RepositoriesClient {
     private repositoriesInfoFilePath: string = "storage/repositories.json";
@@ -23,14 +25,32 @@ class RepositoriesClient {
     }
 }
 
+class LocalPluginsService {
+    async listInstalled(): Promise<string[]> {
+        return fs.readdirSync(PLUGINS_FOLDER_PATH).map<string>(entry => { return entry.replace(".ts", ""); });
+    }
+
+    async removePlugin(pluginName: string): Promise<boolean> {
+        fs.rmSync(`${PLUGINS_FOLDER_PATH}/${pluginName}.ts`);
+        return true; // TODO: Detect if removed
+    }
+
+    async addPlugin(pluginName: string, content: string): Promise<boolean> {
+        fs.writeFileSync(`${PLUGINS_FOLDER_PATH}/${pluginName}.ts`, content);
+        return true; // TODO: Detect if writed
+    }
+}
+
 export default class PkgPlugin implements BasePlugin {
     name: string = "pkg";
     description: string = "Plugins (aka packages) manager.";
     api: PluginsAPI;
     repositoriesClient: RepositoriesClient;
+    localPluginsService: LocalPluginsService;
 
     async onLoad() {
         this.repositoriesClient = new RepositoriesClient();
+        this.localPluginsService = new LocalPluginsService();
 
         await this.api.commandsProcessor
             .register(this.name, this.description, (args: string[], message: Message) => this.onCommand(args, message));
@@ -44,6 +64,12 @@ export default class PkgPlugin implements BasePlugin {
                 break;
             case "search":
                 await this.onSearchSubCommand(message, args[2]);
+                break;
+            case "list":
+                await this.onListSubCommand(message);
+                break;
+            case "remove":
+                await this.onRemovePlugin(message, args[2]);
                 break;
         }
     }
@@ -76,5 +102,29 @@ export default class PkgPlugin implements BasePlugin {
         }
 
         await this.api.showResult(message, string);
+    }
+
+    private async onListSubCommand(message: Message) {
+        let string = "Installed plugins:\n";
+        const plugins = await this.localPluginsService.listInstalled();
+        for(const plugin of plugins) {
+            string += `${plugin}, `;
+        }
+        await this.api.showResult(message, string);
+    }
+
+    private async onRemovePlugin(message: Message, pluginName: string) {
+        const plugins = await this.localPluginsService.listInstalled();
+        const isExist = plugins.find((pluginNameInstalled) => { return pluginNameInstalled === pluginName; });
+        if(isExist) {
+            const isRemoved = await this.localPluginsService.removePlugin(pluginName);
+            if(isRemoved) {
+                await this.api.showResult(message, `Plugin ${pluginName} successfully removed.`);
+            } else {
+                await this.api.showResult(message, `Error: Can't remove plugin.`);
+            }
+        } else {
+            await this.api.showResult(message, `Error: Plugin ${pluginName} not exist.`);
+        }
     }
 }
