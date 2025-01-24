@@ -105,9 +105,9 @@ class MeowTg {
             if (message.text.startsWith(".") && message.senderId.toString() == this.mineId) {
                 const args = parseArguments(message.text);
                 const commandName = args[0].slice(1);
-                const command = this.commandsProcessor.find_command(commandName);
+                const command = this.commandsProcessor.findCommand(commandName);
                 if(command) {
-                    await command.callback(args, message); // Execute
+                    await this.commandsProcessor.execute(commandName, args, message);
                 } else {
                     console.log(`Command not found: ${message.text}`);
                     await this.client.sendMessage(sender, {
