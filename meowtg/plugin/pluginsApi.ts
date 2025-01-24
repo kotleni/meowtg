@@ -1,6 +1,6 @@
 import SessionManager from "../sessionManager";
 import {Api, TelegramClient} from "telegram";
-import CommandsProcessor from "../commandsProcessor";
+import CommandsProcessor from "../command/commandsProcessor";
 import PluginsProcessor from "./pluginsProcessor";
 import Message = Api.Message;
 
