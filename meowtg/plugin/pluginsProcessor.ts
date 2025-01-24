@@ -1,6 +1,6 @@
-import BasePlugin from "./base_plugin";
+import BasePlugin from "./basePlugin";
 import {readdirSync} from "node:fs";
-import PluginsAPI from "./plugins_api";
+import PluginsAPI from "./pluginsApi";
 import {Api} from "telegram";
 import Message = Api.Message;
 
@@ -21,9 +21,9 @@ export default class PluginsProcessor {
     private messagesListeners: OnMessageListener[] = [];
 
     /**
-     * Load plugin by name from plugins folder
+     * Load plugin by name from plugin folder
      * @param name Name of plugin without extension
-     * @param api Prepared plugins api holder
+     * @param api Prepared plugin api holder
      */
     async load(name: string, api: PluginsAPI): Promise<BasePlugin> {
         const path = `${PLUGINS_FOLDER_REVERSE_PATH}/${name}${PLUGIN_FILE_EXTENSION}`;
@@ -48,8 +48,8 @@ export default class PluginsProcessor {
     }
 
     /**
-     * Load all plugins from plugins folder
-     * @param api Prepared plugins api holder
+     * Load all plugin from plugin folder
+     * @param api Prepared plugin api holder
      */
     async loadAll(api: PluginsAPI) {
         const pluginsFiles = readdirSync(PLUGINS_FOLDER_RELATIVE_PATH);

@@ -1,4 +1,4 @@
-import PluginsAPI from "./plugins_api";
+import PluginsAPI from "./pluginsApi";
 
 export default interface BasePlugin {
     name: string;

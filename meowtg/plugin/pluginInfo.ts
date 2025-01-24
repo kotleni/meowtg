@@ -1,4 +1,4 @@
-import VersionInfo from "./version_info";
+import VersionInfo from "./versionInfo";
 
 export default interface PluginInfo {
     name: string;

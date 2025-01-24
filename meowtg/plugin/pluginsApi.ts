@@ -1,7 +1,7 @@
-import SessionManager from "../session_manager";
+import SessionManager from "../sessionManager";
 import {Api, TelegramClient} from "telegram";
-import CommandsProcessor from "../commands_processor";
-import PluginsProcessor from "./plugins_processor";
+import CommandsProcessor from "../commandsProcessor";
+import PluginsProcessor from "./pluginsProcessor";
 import Message = Api.Message;
 
 export default class PluginsAPI {

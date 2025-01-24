@@ -6,11 +6,11 @@ import * as readline from 'readline/promises';
 import {getDisplayName} from "telegram/Utils";
 import {LogLevel} from "telegram/extensions/Logger";
 import * as dotenv from "dotenv";
-import SessionManager from "./session_manager";
-import CommandsProcessor from "./commands_processor";
-import ConfigurationWizard from "./configuration_wizard";
-import PluginsProcessor from "./plugins/plugins_processor";
-import PluginsAPI from "./plugins/plugins_api";
+import SessionManager from "./sessionManager";
+import CommandsProcessor from "./commandsProcessor";
+import ConfigurationWizard from "./configurationWizard";
+import PluginsProcessor from "./plugin/pluginsProcessor";
+import PluginsAPI from "./plugin/pluginsApi";
 import {isPrivateMessageNotMine, parseArguments} from "./utils";
 
 const rl = readline.createInterface({
@@ -70,7 +70,7 @@ class MeowTg {
 
         this.pluginsProcessor = new PluginsProcessor();
         this.pluginsApi = new PluginsAPI(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor);
-        await this.pluginsProcessor.loadAll(this.pluginsApi); // Load all plugins
+        await this.pluginsProcessor.loadAll(this.pluginsApi); // Load all plugin
     }
 
     async start(): Promise<void> {

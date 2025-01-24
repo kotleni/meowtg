@@ -1,8 +1,8 @@
-import BasePlugin from "../meowtg/plugins/base_plugin";
-import PluginsAPI from "../meowtg/plugins/plugins_api";
+import BasePlugin from "../meowtg/plugin/basePlugin";
+import PluginsAPI from "../meowtg/plugin/pluginsApi";
 import {Api} from "telegram";
-import RepoInfo from "../meowtg/plugins/repo_info";
-import PluginInfo from "../meowtg/plugins/plugin_info";
+import RepoInfo from "../meowtg/plugin/repoInfo";
+import PluginInfo from "../meowtg/plugin/pluginInfo";
 import * as fs from "node:fs";
 import Message = Api.Message;
 
@@ -115,7 +115,7 @@ export default class PkgPlugin implements BasePlugin {
     }
 
     private async onListSubCommand(message: Message) {
-        let string = "Installed plugins:\n";
+        let string = "Installed plugin:\n";
         const plugins = await this.localPluginsService.listInstalled();
         for(const plugin of plugins) {
             string += `${plugin}, `;
