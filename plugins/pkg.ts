@@ -108,7 +108,12 @@ export default class PkgPlugin extends BasePlugin {
         for(const repo of repos) {
             const plugins = await this.repositoriesClient.fetchRepositoryPlugins(repo);
             for(const plugin of plugins) {
-                if(plugin.name.includes(query)) {
+                if(
+                    query === "*" ||
+                    plugin.name.includes(query) ||
+                    plugin.description.includes(query) ||
+                    repo.name.includes(query)
+                ) {
                     string += `\n<b>${repo.name}/${plugin.name}</b> - <b>${plugin.description}</b>`;
                 }
             }
