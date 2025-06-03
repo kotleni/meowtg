@@ -28,8 +28,10 @@ export default class ConfigurationWizard {
         await rl.question("Press enter to start: ");
 
         // Creating data folder
-        console.log("Creating data folder...");
-        fs.mkdirSync(this.dataFolderPath);
+        if(!existsSync(this.dataFolderPath)) {
+            console.log("Creating data folder...");
+            fs.mkdirSync(this.dataFolderPath);
+        }
 
         // Check is folder isn't created
         if(!existsSync(this.dataFolderPath)) {
