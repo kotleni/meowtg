@@ -8,7 +8,11 @@
   },
   "dependencies": {
     "@types/node": "^22.10.7",
+    "big-integer": "^1.6.52",
+    "canvas": "^3.1.0",
     "dotenv": "^16.4.7",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7",
     "telegram": "^2.26.16",
     "typescript": "^5.7.3"
   }

@@ -4,6 +4,7 @@ import {Api, TelegramClient} from "telegram";
 import Message = Api.Message;
 import SessionManager from "../sessionManager";
 import CommandsProcessor from "../command/commandsProcessor";
+import MessagesProcessor from "../messagesProcessor";
 
 const PLUGINS_FOLDER_REVERSE_PATH = "../../plugins";
 const PLUGINS_FOLDER_RELATIVE_PATH = "./plugins";
@@ -28,12 +29,20 @@ export default class PluginsProcessor {
      * @param sessionManager
      * @param pluginsProcessor
      * @param commandsProcessor
+     * @param messagesProcessor
      */
-    async load(name: string, telegramClient: TelegramClient, sessionManager: SessionManager, pluginsProcessor: PluginsProcessor, commandsProcessor: CommandsProcessor): Promise<BasePlugin> {
+    async load(
+        name: string,
+        telegramClient: TelegramClient,
+        sessionManager: SessionManager,
+        pluginsProcessor: PluginsProcessor,
+        commandsProcessor: CommandsProcessor,
+        messagesProcessor: MessagesProcessor
+    ): Promise<BasePlugin> {
         const path = `${PLUGINS_FOLDER_REVERSE_PATH}/${name}${PLUGIN_FILE_EXTENSION}`;
         const module = await import(path);
         const plugin: BasePlugin = new module.default();
-        plugin.injectDependencies(telegramClient, sessionManager, pluginsProcessor, commandsProcessor);
+        plugin.injectDependencies(telegramClient, sessionManager, pluginsProcessor, commandsProcessor, messagesProcessor);
         await plugin.onLoad();
         this.loadedPlugins.push(plugin);
         return plugin;
@@ -57,13 +66,14 @@ export default class PluginsProcessor {
      * @param sessionManager
      * @param pluginsProcessor
      * @param commandsProcessor
+     * @param messagesProcessor
      */
-    async loadAll(telegramClient: TelegramClient, sessionManager: SessionManager, pluginsProcessor: PluginsProcessor, commandsProcessor: CommandsProcessor) {
+    async loadAll(telegramClient: TelegramClient, sessionManager: SessionManager, pluginsProcessor: PluginsProcessor, commandsProcessor: CommandsProcessor, messagesProcessor: MessagesProcessor) {
         const pluginsFiles = readdirSync(PLUGINS_FOLDER_RELATIVE_PATH);
         pluginsFiles.forEach(pluginName => {
             const shortPluginName = pluginName.replace(PLUGIN_FILE_EXTENSION, "");
             console.log(`Loading plugin ${shortPluginName}....`);
-            this.load(shortPluginName, telegramClient, sessionManager, pluginsProcessor, commandsProcessor);
+            this.load(shortPluginName, telegramClient, sessionManager, pluginsProcessor, commandsProcessor, messagesProcessor);
         });
     }
 

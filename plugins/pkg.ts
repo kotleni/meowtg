@@ -5,6 +5,7 @@ import PluginInfo from "../meowtg/plugin/pluginInfo";
 import * as fs from "node:fs";
 import Message = Api.Message;
 import {showResult} from "../meowtg/utils";
+import MessagesProcessor from "../meowtg/messagesProcessor";
 
 const PLUGINS_FOLDER_PATH = "./plugins";
 
@@ -187,7 +188,8 @@ export default class PkgPlugin extends BasePlugin {
             this.telegramClient,
             this.sessionManager,
             this.pluginsProcessor,
-            this.commandsProcessor
+            this.commandsProcessor,
+            this.messagesProcessor
         );
 
         await showResult(message, "Plugin successfully installed.");

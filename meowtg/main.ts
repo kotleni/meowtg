@@ -11,6 +11,7 @@ import CommandsProcessor from "./command/commandsProcessor";
 import ConfigurationWizard from "./wizard/configurationWizard";
 import PluginsProcessor from "./plugin/pluginsProcessor";
 import {parseArguments} from "./utils";
+import MessagesProcessor from "./messagesProcessor";
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -22,6 +23,7 @@ class MeowTg {
     sessionManager: SessionManager;
     client: TelegramClient;
     commandsProcessor: CommandsProcessor;
+    messagesProcessor: MessagesProcessor;
     pluginsProcessor: PluginsProcessor;
     mineId: string;
 
@@ -65,9 +67,10 @@ class MeowTg {
         this.client.addEventHandler((event: NewMessageEvent) => this.onMessage(event), new NewMessage({}));
 
         this.commandsProcessor = new CommandsProcessor();
+        this.messagesProcessor = new MessagesProcessor();
 
         this.pluginsProcessor = new PluginsProcessor();
-        await this.pluginsProcessor.loadAll(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor); // Load all plugin
+        await this.pluginsProcessor.loadAll(this.client, this.sessionManager, this.pluginsProcessor, this.commandsProcessor, this.messagesProcessor); // Load all plugin
     }
 
     async start(): Promise<void> {
@@ -92,6 +95,8 @@ class MeowTg {
 
     private async onMessage(event: NewMessageEvent): Promise<void> {
         const message = event.message as Api.Message;
+
+        await this.messagesProcessor.processMessage(message);
 
         if (event.isPrivate) {
             const sender = await message.getSender();
