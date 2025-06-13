@@ -98,7 +98,8 @@ class MeowTg {
 
         await this.messagesProcessor.processMessage(message);
 
-        if (event.isPrivate) {
+        // Check if a message is not from a channel
+        if (event.isPrivate || event.isGroup) {
             const sender = await message.getSender();
             const name = getDisplayName(sender);
             console.log(`${name}: ${message.text}`);
