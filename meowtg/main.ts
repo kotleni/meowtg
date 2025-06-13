@@ -36,8 +36,10 @@ class MeowTg {
             const isDone = await this.configurationWizard.run(rl);
             if(!isDone) {
                 console.log("FATAL ERROR! Configuration wizard is canceled!");
-                process.exit(1); // Exit
             }
+
+            console.log("Done! Start user bot again...");
+            process.exit(1); // Exit
         }
 
         // Load .env config
