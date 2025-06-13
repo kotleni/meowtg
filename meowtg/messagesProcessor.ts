@@ -84,7 +84,7 @@ export default class MessagesProcessor {
             try {
                 const shouldExecute = await handler.condition(message);
                 if (shouldExecute) {
-                    console.log(`Executing handler "${handler.name}" for message ID: ${message.id}`);
+                    // console.log(`Executing handler "${handler.name}" for message ID: ${message.id}`);
                     await handler.callback(message);
                     // Decide if you want to stop after the first matching handler
                     // If so, you might add a 'return;' here, or the callback could return a boolean
