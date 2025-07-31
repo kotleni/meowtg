@@ -1,0 +1,12 @@
+services:
+  prod:
+    tty: false
+    stdin_open: false
+    volumes:
+      - plugins:/app/plugins
+      - storage:/app/storage
+    build: .
+
+volumes:
+  plugins:
+  storage:

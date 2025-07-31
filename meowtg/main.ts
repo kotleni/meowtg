@@ -13,6 +13,7 @@ import ConfigurationWizard from "@/wizard/configurationWizard";
 import PluginsProcessor from "@/plugin/pluginsProcessor";
 import {parseArguments} from "@/utils";
 import MessagesProcessor from "@/messagesProcessor";
+import {Command} from '@commander-js/extra-typings';
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -28,19 +29,31 @@ class MeowTg {
     pluginsProcessor: PluginsProcessor;
     mineId: string;
 
+    constructor() {
+        this.configurationWizard = new ConfigurationWizard();
+    }
+
+    async runConfigurationWizard() {
+        const isDone = await this.configurationWizard.run(rl);
+        if(!isDone) {
+            console.log("FATAL ERROR! Configuration wizard is canceled!");
+        }
+
+        console.log("Done! Start user bot again...");
+        process.exit(1); // Exit
+    }
+
     async init(sessionManager: SessionManager) {
         console.log("Initializing MeowTG...");
 
         // Configuration wizard
-        this.configurationWizard = new ConfigurationWizard();
         if(this.configurationWizard.isNeeded()) { // Check if configuration is needed
-            const isDone = await this.configurationWizard.run(rl);
-            if(!isDone) {
-                console.log("FATAL ERROR! Configuration wizard is canceled!");
+            console.log('Configuration is required.');
+            for(;;) {
+                await new Promise((resolv) => {
+                    setTimeout(resolv, 1000);
+                });
             }
-
-            console.log("Done! Start user bot again...");
-            process.exit(1); // Exit
         }
 
         // Load .env config
@@ -128,10 +141,16 @@ class MeowTg {
     }
 }
 
-// Main
-(async () => {
-    const meowtg = new MeowTg();
-    const sessionManager = new SessionManager();
-    await meowtg.init(sessionManager);
-    await meowtg.start();
-})();
+const program = new Command()
+    .option('--wizard');
+program.parse();
+const options = program.opts();
+
+const meowtg = new MeowTg();
+if(options.wizard) {
+    await meowtg.runConfigurationWizard();
+    process.exit(0);
+}
+const sessionManager = new SessionManager();
+await meowtg.init(sessionManager);
+await meowtg.start();
