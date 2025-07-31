@@ -4,8 +4,8 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx --watch meowtg/main.ts",
-    "run": "npx tsx meowtg/main.ts"
+    "dev": "tsx --watch meowtg/main.ts",
+    "prod": "tsx meowtg/main.ts"
   },
   "dependencies": {
     "@types/node": "^22.10.7",
@@ -13,6 +13,9 @@
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "telegram": "^2.26.16",
+    "ts-node": "^10.9.2",
+    "tsc": "^2.0.4",
+    "tsx": "^4.20.3",
     "typescript": "^5.7.3"
   }
 }

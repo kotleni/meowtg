@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "nodenext", 
+    "moduleResolution": "nodenext", 
+    "target": "es2017", 
+    "lib": ["esnext"],
+
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./meowtg/*"] 
+    },
+    "outDir": "./dist", 
+    "rootDir": "./meowtg"
+  },
+  "include": ["meowtg/**/*.ts"],
+  "exclude": ["node_modules"]
+}

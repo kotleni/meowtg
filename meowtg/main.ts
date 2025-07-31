@@ -2,16 +2,17 @@ import {Logger} from "telegram/extensions";
 import {Api, TelegramClient} from "telegram";
 import {NewMessage} from "telegram/events";
 import {NewMessageEvent} from "telegram/events/NewMessage";
-import * as readline from 'readline/promises';
 import {getDisplayName} from "telegram/Utils";
 import {LogLevel} from "telegram/extensions/Logger";
+
+import * as readline from 'readline/promises';
 import * as dotenv from "dotenv";
-import SessionManager from "./sessionManager";
-import CommandsProcessor from "./command/commandsProcessor";
-import ConfigurationWizard from "./wizard/configurationWizard";
-import PluginsProcessor from "./plugin/pluginsProcessor";
-import {parseArguments} from "./utils";
-import MessagesProcessor from "./messagesProcessor";
+import SessionManager from "@/sessionManager";
+import CommandsProcessor from "@/command/commandsProcessor";
+import ConfigurationWizard from "@/wizard/configurationWizard";
+import PluginsProcessor from "@/plugin/pluginsProcessor";
+import {parseArguments} from "@/utils";
+import MessagesProcessor from "@/messagesProcessor";
 
 const rl = readline.createInterface({
     input: process.stdin,
