@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "module": "nodenext", 
-    "moduleResolution": "nodenext", 
-    "target": "es2017", 
+    "module": "es2015", 
+    "moduleResolution": "bundler", 
+    "target": "es2015", 
     "lib": ["esnext"],
 
     "strict": true,
