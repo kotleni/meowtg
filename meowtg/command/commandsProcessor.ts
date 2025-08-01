@@ -35,7 +35,7 @@ export default class CommandsProcessor {
      * Find command by name
      * @param name Unique name of command without dot
      */
-    findCommand(name: string): Command {
+    findCommand(name: string): Command | undefined {
         return this.registeredCommands.find((command) => command.name === name);
     }
 
@@ -47,6 +47,6 @@ export default class CommandsProcessor {
      */
     async execute(name: string, args: string[], message: Message) {
         const command = this.findCommand(name);
-        await command.callback(args, message);
+        await command?.callback(args, message);
     }
 }

@@ -1,7 +1,6 @@
 services:
   prod:
-    tty: false
-    stdin_open: false
+    env_file: '.env'
     volumes:
       - plugins:/app/plugins
       - storage:/app/storage

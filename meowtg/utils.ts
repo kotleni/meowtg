@@ -43,11 +43,11 @@ function parseArguments(line: string): string[] {
 }
 
 function isMyMessage(message: Message): boolean {
-    return message.chatId.toString() !== message.senderId.toString();
+    return message.chatId?.toString() !== message.senderId?.toString();
 }
 
 async function showResult(message: Message, output: string) {
-    await message.client.editMessage(message.peerId, { message: message.id, text: output, parseMode: "html" });
+    await message.client!.editMessage(message.peerId, { message: message.id, text: output, parseMode: "html" });
 }
 
 export { parseArguments, isMyMessage, showResult };
